@@ -15,6 +15,8 @@ class Player extends Entity
 	var jumpSpeed = 200.0;
 	var jumpEnergy = 0.2;
 	var _jumpEnergy = 0.2;
+	var coyote = 0.2;
+	var _coyote = 0.2;
 
 	public function new(bullets:FlxTypedGroup<Bullet>)
 	{
@@ -59,19 +61,33 @@ class Player extends Entity
 	{
 		var onFloor = isTouching(FlxObject.FLOOR);
 		var jump = false;
+		var intentJumpHigher = FlxG.keys.anyPressed([SPACE, W, UP, J, Z]);
+		var intentJump = FlxG.keys.anyJustPressed([SPACE, W, UP, J, Z]);
 
 		if (!onFloor)
 		{
-			if (!FlxG.keys.anyPressed([SPACE, W, UP, J, Z]))
+			if (!intentJumpHigher)
 				_jumpEnergy = 0.0;
 			else if (_jumpEnergy > 0.0)
 				jump = true;
 			_jumpEnergy -= elapsed;
+			_coyote -= elapsed;
 		}
 		else
 		{
+			_coyote = coyote;
 			_jumpEnergy = 0.0;
-			if (FlxG.keys.anyJustPressed([SPACE, W, UP, J, Z]))
+			if (intentJump)
+			{
+				_jumpEnergy = jumpEnergy;
+				jump = true;
+			}
+		}
+
+		if (intentJump && !onFloor && _coyote > 0)
+		{
+			_jumpEnergy = 0.0;
+			if (intentJump)
 			{
 				_jumpEnergy = jumpEnergy;
 				jump = true;
