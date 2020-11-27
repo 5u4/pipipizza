@@ -8,9 +8,10 @@ import modules.Entity;
 
 class Player extends Entity
 {
+	public var hspeed = 75;
+	public var jumpSpeed = 200;
+
 	var bullets:FlxTypedGroup<Bullet>;
-	var hspeed = 75;
-	var jumpSpeed = 200;
 
 	public function new(bullets:FlxTypedGroup<Bullet>)
 	{
