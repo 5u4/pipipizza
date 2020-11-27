@@ -34,15 +34,14 @@ class Player extends Entity
 		var x = 0;
 
 		if (FlxG.keys.anyPressed([A, LEFT]))
-		{
 			x -= 1;
-			facing = FlxObject.LEFT;
-		}
 		if (FlxG.keys.anyPressed([D, RIGHT]))
-		{
 			x += 1;
+
+		if (x > 0)
 			facing = FlxObject.RIGHT;
-		}
+		else if (x < 0)
+			facing = FlxObject.LEFT;
 
 		velocity.x = hspeed * x;
 	}
