@@ -17,6 +17,8 @@ class Player extends Entity
 	var _jumpEnergy = 0.2;
 	var coyote = 0.2;
 	var _coyote = 0.2;
+	var jumpBuffer = 0.1;
+	var _jumpBuffer = 0.1;
 
 	public function new(bullets:FlxTypedGroup<Bullet>)
 	{
@@ -77,22 +79,27 @@ class Player extends Entity
 		{
 			_coyote = coyote;
 			_jumpEnergy = 0.0;
-			if (intentJump)
+			if (intentJump || _jumpBuffer > 0)
 			{
 				_jumpEnergy = jumpEnergy;
 				jump = true;
 			}
 		}
 
-		if (intentJump && !onFloor && _coyote > 0)
+		if (intentJump && !onFloor)
 		{
-			_jumpEnergy = 0.0;
-			if (intentJump)
+			if (_coyote > 0)
 			{
-				_jumpEnergy = jumpEnergy;
-				jump = true;
+				_jumpEnergy = 0.0;
+				if (intentJump)
+				{
+					_jumpEnergy = jumpEnergy;
+					jump = true;
+				}
 			}
+			_jumpBuffer = jumpBuffer;
 		}
+		_jumpBuffer -= elapsed;
 
 		if (jump)
 			velocity.y = -jumpSpeed;
