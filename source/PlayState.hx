@@ -24,9 +24,6 @@ class PlayState extends FlxState
 		walls.setTileProperties(2, FlxObject.ANY);
 		add(walls);
 
-		var grav = map.getLevelValue("gravity");
-		var maxGrav = map.getLevelValue("max_gravity");
-
 		bullets = new FlxTypedGroup<Bullet>(100);
 		for (_ in 1...100)
 		{
@@ -37,7 +34,7 @@ class PlayState extends FlxState
 		add(bullets);
 
 		player = new Player(bullets);
-		player.addComponent(new Gravity(grav, maxGrav));
+		player.addComponent(new Gravity());
 		add(player);
 
 		map.loadEntities(onLoadEntity, "entities");
@@ -55,14 +52,10 @@ class PlayState extends FlxState
 
 	function onLoadEntity(entity:EntityData)
 	{
-		trace(entity);
-
 		switch (entity.name)
 		{
 			case "player":
 				player.setPosition(entity.x, entity.y);
-				player.hspeed = entity.values.movespeed;
-				player.jumpSpeed = entity.values.jump_height;
 		}
 	}
 }
