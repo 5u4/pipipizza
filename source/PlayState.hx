@@ -6,7 +6,6 @@ import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
-import modules.Gravity;
 
 class PlayState extends FlxState
 {
@@ -34,7 +33,6 @@ class PlayState extends FlxState
 		add(bullets);
 
 		player = new Player(bullets);
-		player.addComponent(new Gravity());
 		add(player);
 
 		map.loadEntities(onLoadEntity, "entities");
