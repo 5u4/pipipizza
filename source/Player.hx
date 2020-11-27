@@ -15,8 +15,8 @@ class Player extends Entity
 	var jumpSpeed = 200.0;
 	var jumpEnergy = 0.2;
 	var _jumpEnergy = 0.2;
-	var coyote = 0.2;
-	var _coyote = 0.2;
+	var coyote = 0.1;
+	var _coyote = 0.1;
 	var jumpBuffer = 0.1;
 	var _jumpBuffer = 0.1;
 
@@ -68,7 +68,17 @@ class Player extends Entity
 
 		if (!onFloor)
 		{
-			if (!intentJumpHigher)
+			if (intentJump)
+			{
+				if (_coyote > 0)
+				{
+					_coyote = 0.0;
+					_jumpEnergy = jumpEnergy;
+					jump = true;
+				}
+				_jumpBuffer = jumpBuffer;
+			}
+			else if (!intentJumpHigher)
 				_jumpEnergy = 0.0;
 			else if (_jumpEnergy > 0.0)
 				jump = true;
@@ -81,24 +91,12 @@ class Player extends Entity
 			_jumpEnergy = 0.0;
 			if (intentJump || _jumpBuffer > 0)
 			{
+				_coyote = 0.0;
 				_jumpEnergy = jumpEnergy;
 				jump = true;
 			}
 		}
 
-		if (intentJump && !onFloor)
-		{
-			if (_coyote > 0)
-			{
-				_jumpEnergy = 0.0;
-				if (intentJump)
-				{
-					_jumpEnergy = jumpEnergy;
-					jump = true;
-				}
-			}
-			_jumpBuffer = jumpBuffer;
-		}
 		_jumpBuffer -= elapsed;
 
 		if (jump)
