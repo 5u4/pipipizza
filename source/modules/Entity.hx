@@ -31,10 +31,10 @@ class Entity extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
 		for (entity in entities)
 			entity.update(elapsed);
 		for (component in components)
 			component.update(elapsed);
+		super.update(elapsed);
 	}
 }
