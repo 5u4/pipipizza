@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.math.FlxVector;
 import flixel.util.FlxColor;
 import modules.Entity;

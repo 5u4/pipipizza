@@ -6,7 +6,7 @@ import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
-import modules.PlatformerController;
+import modules.platformer.PlatformerController;
 
 class PlayState extends FlxState
 {

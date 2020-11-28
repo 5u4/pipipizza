@@ -1,14 +1,12 @@
 package modules;
 
-import flixel.FlxSprite;
-
-class Entity extends FlxSprite
+class ComponentGroup extends Component
 {
-	var components:Array<Component> = new Array<Component>();
+	public var components:Array<Component> = new Array<Component>();
 
 	public function addComponent(component:Component)
 	{
-		component.setEntity(this);
+		component.parent = this;
 		components.push(component);
 	}
 
@@ -16,12 +14,6 @@ class Entity extends FlxSprite
 	{
 		for (component in cs)
 			addComponent(component);
-	}
-
-	public function removeComponent(component:Component)
-	{
-		component.setEntity(null);
-		components.remove(component);
 	}
 
 	override function update(elapsed:Float)
