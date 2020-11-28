@@ -3,6 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxVector;
 import flixel.util.FlxColor;
 import modules.Entity;
 
@@ -11,7 +13,7 @@ class Player extends Entity
 	var bullets:FlxTypedGroup<Bullet>;
 	var grav = 800.0;
 	var maxGrav = 1500.0;
-	var hspeed = 100.0;
+	var hspeed = 150.0;
 	var jumpSpeed = 200.0;
 	var jumpEnergy = 0.2;
 	var _jumpEnergy = 0.2;
@@ -19,6 +21,10 @@ class Player extends Entity
 	var _coyote = 0.1;
 	var jumpBuffer = 0.1;
 	var _jumpBuffer = 0.1;
+	var xweight = 0.2;
+	var invincible = 1.0;
+	var _invincible = 0.0;
+	var impulse = new FlxVector(1200.0, 400.0);
 
 	public function new(bullets:FlxTypedGroup<Bullet>)
 	{
@@ -29,12 +35,24 @@ class Player extends Entity
 
 	override function update(elapsed:Float)
 	{
+		_invincible -= elapsed;
 		handleGravity(elapsed);
-		handleHMovement();
+		handleHMovement(elapsed);
 		handleVMovement(elapsed);
 		handleShoot();
 
 		super.update(elapsed);
+	}
+
+	public function onHitEnemy(enemy:Enemy)
+	{
+		if (_invincible > 0)
+			return;
+		_invincible = invincible;
+		FlxG.state.camera.shake(0.005, 0.1);
+		var norm = new FlxVector(x - enemy.x, y - enemy.y).normalize();
+		velocity.x = norm.x * impulse.x;
+		velocity.y = norm.y * impulse.y;
 	}
 
 	function handleGravity(elapsed:Float)
@@ -42,21 +60,21 @@ class Player extends Entity
 		velocity.y = Math.min(velocity.y + grav * elapsed, maxGrav);
 	}
 
-	function handleHMovement()
+	function handleHMovement(elapsed:Float)
 	{
-		var x = 0;
+		var xmove = 0;
 
 		if (FlxG.keys.anyPressed([A, LEFT]))
-			x -= 1;
+			xmove -= 1;
 		if (FlxG.keys.anyPressed([D, RIGHT]))
-			x += 1;
+			xmove += 1;
 
-		if (x > 0)
+		if (xmove > 0)
 			facing = FlxObject.RIGHT;
-		else if (x < 0)
+		else if (xmove < 0)
 			facing = FlxObject.LEFT;
 
-		velocity.x = hspeed * x;
+		velocity.x = FlxMath.lerp(velocity.x, hspeed * xmove, xweight);
 	}
 
 	function handleVMovement(elapsed:Float)

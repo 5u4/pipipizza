@@ -10,6 +10,7 @@ import flixel.tile.FlxTilemap;
 class PlayState extends FlxState
 {
 	var player:Player;
+	var enemy:Enemy;
 	var bullets:FlxTypedGroup<Bullet>;
 
 	var map:FlxOgmo3Loader;
@@ -32,6 +33,9 @@ class PlayState extends FlxState
 		}
 		add(bullets);
 
+		enemy = new Enemy();
+		add(enemy);
+
 		player = new Player(bullets);
 		add(player);
 
@@ -45,7 +49,10 @@ class PlayState extends FlxState
 		super.update(elapsed);
 
 		FlxG.collide(player, walls);
+		FlxG.collide(enemy, walls);
+		FlxG.collide(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
+		FlxG.collide(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
 	}
 
 	function onLoadEntity(entity:EntityData)
@@ -54,6 +61,8 @@ class PlayState extends FlxState
 		{
 			case "player":
 				player.setPosition(entity.x, entity.y);
+			case "enemy":
+				enemy.setPosition(entity.x, entity.y);
 		}
 	}
 }
