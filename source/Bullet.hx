@@ -11,7 +11,7 @@ class Bullet extends Entity
 		makeGraphic(4, 4, FlxColor.YELLOW);
 	}
 
-	public function fire(x:Float, y:Float, direction:Int, speed:Float = 150)
+	public function fire(x:Float, y:Float, direction:Int, speed:Float = 250)
 	{
 		reset(x, y);
 		velocity.x = direction * speed;

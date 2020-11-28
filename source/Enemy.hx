@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxG;
 import flixel.util.FlxColor;
 import modules.Entity;
 
@@ -8,6 +7,7 @@ class Enemy extends Entity
 {
 	var grav = 800.0;
 	var maxGrav = 1500.0;
+	var hp = 10.0;
 
 	public function new()
 	{
@@ -30,5 +30,14 @@ class Enemy extends Entity
 	public function onHitBullet(bullet:Bullet)
 	{
 		bullet.kill();
+		health -= 1 / hp;
+		deathCheck();
+	}
+
+	function deathCheck()
+	{
+		if (health > 0)
+			return;
+		kill();
 	}
 }
