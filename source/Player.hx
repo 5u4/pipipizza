@@ -13,6 +13,7 @@ class Player extends Entity
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
 	var _invincible = 0.0;
+	var stompAngleThreshold = 130.0;
 	var impulse = new FlxVector(1200.0, 400.0);
 	var charge = 0.0;
 	var chargeAttackThreshold = 1.0;
@@ -40,11 +41,24 @@ class Player extends Entity
 
 	public function onHitEnemy(enemy:Enemy)
 	{
-		if (_invincible > 0)
-			return;
-		_invincible = invincible;
-		FlxG.state.camera.shake(0.005, 0.1);
 		var norm = new FlxVector(x - enemy.x, y - enemy.y).normalize();
+		var angle = new FlxVector(x, y).angleBetween(enemy.getPosition());
+
+		if (Math.abs(angle) >= stompAngleThreshold)
+		{
+			enemy.receiveDamage();
+		}
+		else if (_invincible > 0)
+		{
+			return;
+		}
+		else
+		{
+			// Damage
+			FlxG.state.camera.shake(0.005, 0.1);
+			_invincible = invincible;
+		}
+
 		velocity.x = norm.x * impulse.x;
 		velocity.y = norm.y * impulse.y;
 	}

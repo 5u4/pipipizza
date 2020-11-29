@@ -27,11 +27,16 @@ class Enemy extends Entity
 		velocity.y = Math.min(velocity.y + grav * elapsed, maxGrav);
 	}
 
+	public function receiveDamage()
+	{
+		health -= 1 / hp;
+		deathCheck();
+	}
+
 	public function onHitBullet(bullet:Bullet)
 	{
 		bullet.kill();
-		health -= 1 / hp;
-		deathCheck();
+		receiveDamage();
 	}
 
 	function deathCheck()

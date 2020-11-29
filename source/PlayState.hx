@@ -50,7 +50,7 @@ class PlayState extends FlxState
 
 		FlxG.collide(player, walls);
 		FlxG.collide(enemy, walls);
-		FlxG.collide(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
+		FlxG.overlap(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.overlap(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
 	}
