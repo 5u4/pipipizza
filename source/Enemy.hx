@@ -2,6 +2,7 @@ package;
 
 import flixel.util.FlxColor;
 import modules.Entity;
+import modules.platformer.Gravity;
 
 class Enemy extends Entity
 {
@@ -13,18 +14,12 @@ class Enemy extends Entity
 	{
 		super();
 		makeGraphic(32, 32, FlxColor.RED);
+		addComponent(new Gravity());
 	}
 
 	override function update(elapsed:Float)
 	{
-		handleGravity(elapsed);
-
 		super.update(elapsed);
-	}
-
-	function handleGravity(elapsed:Float)
-	{
-		velocity.y = Math.min(velocity.y + grav * elapsed, maxGrav);
 	}
 
 	public function receiveDamage()
