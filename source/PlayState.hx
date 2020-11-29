@@ -6,7 +6,6 @@ import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
-import modules.platformer.PlatformerController;
 
 class PlayState extends FlxState
 {
@@ -38,7 +37,6 @@ class PlayState extends FlxState
 		add(enemy);
 
 		player = new Player(bullets);
-		player.addComponent(new PlatformerController());
 		add(player);
 
 		map.loadEntities(onLoadEntity, "entities");
@@ -54,7 +52,7 @@ class PlayState extends FlxState
 		FlxG.collide(enemy, walls);
 		FlxG.collide(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
-		FlxG.collide(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
+		FlxG.overlap(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
 	}
 
 	function onLoadEntity(entity:EntityData)

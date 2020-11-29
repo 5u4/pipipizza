@@ -5,22 +5,30 @@ import flixel.math.FlxMath;
 
 class PlatformerMovement extends Component
 {
+	public var speedScale = 1.0;
 	public var hspeed = 150.0;
 	public var xweight = 0.2;
 	public var moveIntention = () -> 0;
+
+	var _speedScale = 1.0;
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
+		var e = entity();
+
+		if (e.isTouching(FlxObject.FLOOR))
+			_speedScale = speedScale;
+
 		var moveIntent = moveIntention();
-		var move = if (moveIntent > 0) 1 else if (moveIntent < 0) -1 else 0;
+		var move:Float = if (moveIntent > 0) 1 else if (moveIntent < 0) -1 else 0;
 
 		if (move > 0)
-			entity().facing = FlxObject.RIGHT;
+			e.facing = FlxObject.RIGHT;
 		else if (move < 0)
-			entity().facing = FlxObject.LEFT;
+			e.facing = FlxObject.LEFT;
 
-		entity().velocity.x = FlxMath.lerp(entity().velocity.x, hspeed * move, xweight);
+		e.velocity.x = FlxMath.lerp(e.velocity.x, hspeed * move * _speedScale, xweight);
 	}
 }
