@@ -82,12 +82,10 @@ class Player extends Entity
 
 		bullet.fire(x + width / 2, y + height / 2, if (facing == FlxObject.LEFT) -1 else 1);
 
-		if (!isChargedAttack)
-			return;
-
 		// TODO: Change to lazer
-		bullet.setSize(4.0, 4.0);
-		bullet.scale.x = 4.0;
-		bullet.scale.y = 4.0;
+		var size = isChargedAttack ? 4.0 : 1.0;
+		bullet.setSize(size, size);
+		bullet.scale.x = size;
+		bullet.scale.y = size;
 	}
 }
