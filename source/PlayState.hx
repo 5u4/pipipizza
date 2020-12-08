@@ -6,6 +6,9 @@ import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
+import modules.brains.statemachine.StateMachine;
+import states.ChargeState;
+import states.IdleState;
 
 class PlayState extends FlxState
 {
@@ -33,7 +36,15 @@ class PlayState extends FlxState
 		}
 		add(bullets);
 
-		enemy = new Enemy();
+		var brain = new StateMachine();
+		var chargeState = new ChargeState();
+		brain.states.push(chargeState);
+		brain.states.push(new IdleState());
+		enemy = new Enemy(brain);
+		chargeState.enemy = enemy;
+		chargeState.accel = 200.0;
+		enemy.maxVelocity.x = 800.0;
+		enemy.facing = FlxObject.LEFT;
 		add(enemy);
 
 		player = new Player(bullets);
