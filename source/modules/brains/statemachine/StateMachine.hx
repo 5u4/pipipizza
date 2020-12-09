@@ -2,8 +2,7 @@ package modules.brains.statemachine;
 
 class StateMachine extends Component implements State
 {
-	var state:State;
-
+	public var state:State;
 	public var states = new Array<State>();
 
 	public function new()

@@ -3,6 +3,7 @@ package modules.platformer;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
 
+// TODO: Integrate impulse
 class PlatformerMovement extends Component
 {
 	public var speedScale = 1.0;

@@ -1,29 +1,26 @@
 package;
 
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import modules.Entity;
-import modules.brains.statemachine.StateMachine;
 import modules.platformer.Gravity;
 
 class Enemy extends Entity
 {
 	var grav = 800.0;
 	var maxGrav = 1500.0;
-	var hp = 10.0;
-	var brain:StateMachine;
+	var hp = 100.0;
 
-	public function new(brain:StateMachine)
+	public function new()
 	{
 		super();
-		makeGraphic(32, 32, FlxColor.RED);
+		makeGraphic(56, 56, FlxColor.RED);
 		addComponent(new Gravity());
-		this.brain = brain;
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		brain.update(elapsed);
 	}
 
 	public function receiveDamage()
@@ -37,6 +34,8 @@ class Enemy extends Entity
 		bullet.kill();
 		receiveDamage();
 	}
+
+	public function onHitWall(wall:FlxTilemap) {}
 
 	function deathCheck()
 	{

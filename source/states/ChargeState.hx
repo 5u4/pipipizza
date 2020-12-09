@@ -1,18 +1,19 @@
 package states;
 
+import enemies.Hog;
 import flixel.FlxObject;
 import modules.brains.statemachine.State;
 
 class ChargeState implements State
 {
-	public var enemy:Enemy;
+	public var enemy:Hog;
 	public var accel:Float;
 
 	public function new() {}
 
 	public function shouldEnable()
 	{
-		return true;
+		return enemy.canCharge();
 	}
 
 	public function enable()
@@ -23,7 +24,7 @@ class ChargeState implements State
 
 	public function shouldDisable()
 	{
-		return false;
+		return !enemy.canCharge();
 	}
 
 	public function disable()

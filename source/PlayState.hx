@@ -1,14 +1,12 @@
 package;
 
+import enemies.Hog;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
-import modules.brains.statemachine.StateMachine;
-import states.ChargeState;
-import states.IdleState;
 
 class PlayState extends FlxState
 {
@@ -36,14 +34,7 @@ class PlayState extends FlxState
 		}
 		add(bullets);
 
-		var brain = new StateMachine();
-		var chargeState = new ChargeState();
-		brain.states.push(chargeState);
-		brain.states.push(new IdleState());
-		enemy = new Enemy(brain);
-		chargeState.enemy = enemy;
-		chargeState.accel = 200.0;
-		enemy.maxVelocity.x = 800.0;
+		enemy = new Hog();
 		enemy.facing = FlxObject.LEFT;
 		add(enemy);
 
@@ -60,7 +51,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 
 		FlxG.collide(player, walls);
-		FlxG.collide(enemy, walls);
+		FlxG.collide(enemy, walls, (e:Enemy, w) -> e.onHitWall(w));
 		FlxG.overlap(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.overlap(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));

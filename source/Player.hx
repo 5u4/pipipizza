@@ -41,8 +41,10 @@ class Player extends Entity
 
 	public function onHitEnemy(enemy:Enemy)
 	{
-		var norm = new FlxVector(x - enemy.x, y - enemy.y).normalize();
-		var angle = new FlxVector(x, y).angleBetween(enemy.getPosition());
+		var pos = getMidpoint();
+		var targetPos = enemy.getMidpoint();
+		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 50).normalize();
+		var angle = new FlxVector(pos.x, pos.y).angleBetween(targetPos);
 
 		if (Math.abs(angle) >= stompAngleThreshold)
 		{
@@ -55,7 +57,7 @@ class Player extends Entity
 		else
 		{
 			// Damage
-			FlxG.state.camera.shake(0.005, 0.1);
+			FlxG.state.camera.shake(0.01, 0.1);
 			_invincible = invincible;
 		}
 

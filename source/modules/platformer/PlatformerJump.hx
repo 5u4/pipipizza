@@ -2,6 +2,7 @@ package modules.platformer;
 
 import flixel.FlxObject;
 
+// TODO: Integrate impulse
 class PlatformerJump extends Component
 {
 	public var jumpScale = 1.0;
