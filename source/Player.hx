@@ -41,6 +41,9 @@ class Player extends Entity
 
 	public function onHitEnemy(enemy:Enemy)
 	{
+		if (_invincible > 0)
+			return;
+
 		var pos = getMidpoint();
 		var targetPos = enemy.getMidpoint();
 		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 50).normalize();
@@ -49,10 +52,6 @@ class Player extends Entity
 		if (Math.abs(angle) >= stompAngleThreshold)
 		{
 			enemy.receiveDamage();
-		}
-		else if (_invincible > 0)
-		{
-			return;
 		}
 		else
 		{
