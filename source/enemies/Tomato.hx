@@ -9,7 +9,7 @@ import modules.Entity;
 import modules.brains.statemachine.State;
 import modules.brains.statemachine.StateMachine;
 
-class Potato extends Enemy
+class Tomato extends Enemy
 {
 	var target:Entity;
 	var brain = new StateMachine();
@@ -19,6 +19,7 @@ class Potato extends Enemy
 	{
 		super();
 		this.target = target;
+		hp = 30;
 
 		brain.states.push(MakeJumpAttackState());
 		brain.states.push(MakeIdleState());

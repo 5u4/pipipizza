@@ -1,6 +1,5 @@
-package;
+package states;
 
-import enemies.Potato;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -8,10 +7,10 @@ import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 
-class PlayState extends FlxState
+class BattleState extends FlxState
 {
 	var player:Player;
-	var enemy:Enemy;
+	var enemies:FlxTypedGroup<Enemy>;
 	var bullets:FlxTypedGroup<Bullet>;
 
 	var map:FlxOgmo3Loader;
@@ -35,11 +34,9 @@ class PlayState extends FlxState
 		add(bullets);
 
 		player = new Player(bullets);
-		// enemy = new Hog();
-		enemy = new Potato(player);
-		enemy.facing = FlxObject.LEFT;
+		enemies = new FlxTypedGroup<Enemy>();
 
-		add(enemy);
+		add(enemies);
 		add(player);
 
 		map.loadEntities(onLoadEntity, "entities");
@@ -52,10 +49,10 @@ class PlayState extends FlxState
 		super.update(elapsed);
 
 		FlxG.collide(player, walls);
-		FlxG.collide(enemy, walls, (e:Enemy, w) -> e.onHitWall(w));
-		FlxG.overlap(player, enemy, (p:Player, e:Enemy) -> p.onHitEnemy(e));
+		FlxG.collide(enemies, walls, (e:Enemy, w) -> e.onHitWall(w));
+		FlxG.overlap(player, enemies, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
-		FlxG.overlap(bullets, enemy, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
+		FlxG.overlap(bullets, enemies, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
 	}
 
 	function onLoadEntity(entity:EntityData)
@@ -65,7 +62,14 @@ class PlayState extends FlxState
 			case "player":
 				player.setPosition(entity.x, entity.y);
 			case "enemy":
+				var enemy = getEnemy();
 				enemy.setPosition(entity.x, entity.y);
+				enemies.add(enemy);
 		}
+	}
+
+	function getEnemy()
+	{
+		return new Enemy();
 	}
 }
