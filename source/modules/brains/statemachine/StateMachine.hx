@@ -1,33 +1,31 @@
 package modules.brains.statemachine;
 
-class StateMachine extends Component implements State
+class StateMachine extends Component implements IState
 {
-	public var state:State;
-	public var states = new Array<State>();
+	public var state:IState;
+	public var states = new Array<IState>();
 
 	public function new()
 	{
 		super();
 	}
 
-	public function shouldEnable()
+	public dynamic function shouldEnable()
 	{
 		return false;
 	}
 
-	public function enable() {}
+	public dynamic function enable() {}
 
-	public function shouldDisable()
+	public dynamic function shouldDisable()
 	{
 		return false;
 	}
 
-	public function disable() {}
+	public dynamic function disable() {}
 
-	override function update(elapsed:Float)
+	public dynamic function handle(elapsed:Float)
 	{
-		super.update(elapsed);
-
 		if (state == null)
 		{
 			state = decideState();
@@ -36,7 +34,7 @@ class StateMachine extends Component implements State
 			return;
 		}
 
-		state.update(elapsed);
+		state.handle(elapsed);
 
 		if (state != null && state.shouldDisable())
 		{
@@ -44,6 +42,12 @@ class StateMachine extends Component implements State
 			state = null;
 			return;
 		}
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		handle(elapsed);
 	}
 
 	function decideState()

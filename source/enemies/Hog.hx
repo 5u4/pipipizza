@@ -4,12 +4,13 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxVector;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxTimer;
+import modules.brains.statemachine.State;
 import modules.brains.statemachine.StateMachine;
-import states.ChargeState;
-import states.IdleState;
 
 class Hog extends Enemy
 {
+	var isCharging = false;
 	var chargeCoolDown = 0.3;
 	var _chargeCoolDown = 1.0;
 	var brain = new StateMachine();
@@ -19,18 +20,14 @@ class Hog extends Enemy
 	{
 		super();
 
-		var chargeState = new ChargeState();
-		chargeState.enemy = this;
-		chargeState.accel = 300.0;
 		maxVelocity.x = 1000.0;
-
-		brain.states.push(chargeState);
-		brain.states.push(new IdleState());
+		brain.states.push(MakeChargeState());
+		brain.states.push(MakeIdleState());
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (!Std.is(brain.state, ChargeState) && isTouching(FlxObject.FLOOR))
+		if (!isCharging && isTouching(FlxObject.FLOOR))
 		{
 			velocity.x = 0;
 			velocity.y = 0;
@@ -55,13 +52,41 @@ class Hog extends Enemy
 
 	public function handleChargeCoolDown(elapsed:Float)
 	{
-		if (!Std.is(brain.state, ChargeState))
+		if (!isCharging)
 			_chargeCoolDown -= elapsed;
 	}
 
 	public function canCharge()
 	{
 		return _chargeCoolDown <= 0.0;
+	}
+
+	function MakeIdleState()
+	{
+		var state = new State();
+		var timer = new FlxTimer();
+		state.shouldEnable = () -> true;
+		state.enable = () -> timer.start();
+		state.shouldDisable = () -> timer.finished;
+		return state;
+	}
+
+	function MakeChargeState(accel = 300.0)
+	{
+		var state = new State();
+		state.shouldEnable = () -> canCharge();
+		state.enable = () ->
+		{
+			acceleration.x = accel * (facing == FlxObject.LEFT ? -1.0 : 1.0);
+			isCharging = true;
+		}
+		state.shouldDisable = () -> !canCharge();
+		state.disable = () ->
+		{
+			acceleration.x = 0;
+			isCharging = false;
+		}
+		return state;
 	}
 
 	function bounce()

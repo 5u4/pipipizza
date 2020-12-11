@@ -1,10 +1,22 @@
 package modules.brains.statemachine;
 
-interface State
+class State implements IState
 {
-	function shouldEnable():Bool;
-	function enable():Void;
-	function shouldDisable():Bool;
-	function disable():Void;
-	function update(elapsed:Float):Void;
+	public function new() {}
+
+	public dynamic function shouldEnable()
+	{
+		return false;
+	}
+
+	public dynamic function enable() {}
+
+	public dynamic function shouldDisable()
+	{
+		return true;
+	}
+
+	public dynamic function disable() {}
+
+	public dynamic function handle(elapsed:Float) {}
 }
