@@ -6,7 +6,7 @@ import flixel.FlxObject;
 class PlatformerJump extends Component
 {
 	public var jumpScale = 1.0;
-	public var jumpSpeed = 200.0;
+	public var jumpSpeed = 260.0;
 	public var jumpEnergy = 0.2;
 	public var _jumpEnergy = 0.2;
 	public var coyote = 0.1;

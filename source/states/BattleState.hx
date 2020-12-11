@@ -18,7 +18,7 @@ class BattleState extends FlxState
 
 	override public function create()
 	{
-		map = new FlxOgmo3Loader(AssetPaths.PlatformerShooter__ogmo, AssetPaths.room1__json);
+		map = new FlxOgmo3Loader(AssetPaths.PlatformerShooter__ogmo, getRoom());
 		walls = map.loadTilemap(AssetPaths.tiles__png, "floor");
 		walls.setTileProperties(1, FlxObject.NONE);
 		walls.setTileProperties(2, FlxObject.ANY);
@@ -66,6 +66,11 @@ class BattleState extends FlxState
 				enemy.setPosition(entity.x, entity.y);
 				enemies.add(enemy);
 		}
+	}
+
+	function getRoom()
+	{
+		return AssetPaths.room1__json;
 	}
 
 	function getEnemy()

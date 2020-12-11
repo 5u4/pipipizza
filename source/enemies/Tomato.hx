@@ -56,14 +56,15 @@ class Tomato extends Enemy
 	{
 		var state = new State();
 		var timer = new FlxTimer();
-		timer.start();
+		timer.start(Math.random() * 2);
 		state.shouldEnable = () -> timer.finished && isTouching(FlxObject.FLOOR);
 		state.enable = () ->
 		{
 			var pos = getMidpoint();
 			var tarPos = target.getMidpoint();
 			var norm = new FlxVector(tarPos.x - pos.x, tarPos.y - pos.y).normalize();
-			var force = 300.0;
+			var force = 270.0 + 30.0 * Math.random();
+			norm.x *= Math.random() > 0.3 ? 1.0 : -0.7;
 			velocity.x = norm.x * force;
 			velocity.y = norm.y * force - 320.0;
 			lastXVelocity = velocity.x;
@@ -75,7 +76,7 @@ class Tomato extends Enemy
 		state.shouldDisable = () -> isTouching(FlxObject.FLOOR);
 		state.disable = () ->
 		{
-			timer.start(0.5);
+			timer.start(Math.random() * 0.5 + 0.5);
 			velocity.x = 0;
 			velocity.y = 0;
 		};

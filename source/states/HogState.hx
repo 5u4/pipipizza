@@ -11,4 +11,9 @@ class HogState extends BattleState
 		enemy.facing = enemy.facing = FlxObject.LEFT;
 		return enemy;
 	}
+
+	override function getRoom()
+	{
+		return AssetPaths.room1__json;
+	}
 }
