@@ -1,6 +1,6 @@
 package;
 
-import enemies.Hog;
+import enemies.Potato;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -34,11 +34,12 @@ class PlayState extends FlxState
 		}
 		add(bullets);
 
-		enemy = new Hog();
-		enemy.facing = FlxObject.LEFT;
-		add(enemy);
-
 		player = new Player(bullets);
+		// enemy = new Hog();
+		enemy = new Potato(player);
+		enemy.facing = FlxObject.LEFT;
+
+		add(enemy);
 		add(player);
 
 		map.loadEntities(onLoadEntity, "entities");

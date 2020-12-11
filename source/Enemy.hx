@@ -14,8 +14,13 @@ class Enemy extends Entity
 	public function new()
 	{
 		super();
-		makeGraphic(56, 56, FlxColor.RED);
+		render();
 		addComponent(new Gravity());
+	}
+
+	public function render()
+	{
+		makeGraphic(56, 56, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
