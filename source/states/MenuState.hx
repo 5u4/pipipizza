@@ -28,7 +28,7 @@ class MenuState extends FlxState
 		lv2Button.y += lv2Button.height + 10;
 		add(lv2Button);
 
-		lv3Button = new FlxButton(0, 0, "Level 3");
+		lv3Button = new FlxButton(0, 0, "Level 3", () -> FlxG.switchState(new CheeseState()));
 		lv3Button.screenCenter();
 		lv3Button.y = lv2Button.y + lv3Button.height + 10;
 		add(lv3Button);
