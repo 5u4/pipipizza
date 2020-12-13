@@ -44,22 +44,36 @@ class Player extends Entity
 		if (_invincible > 0)
 			return;
 
-		var pos = getMidpoint();
-		var targetPos = enemy.getMidpoint();
-		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 50).normalize();
+		var pos = getMidpoint(), targetPos = enemy.getMidpoint();
 		var angle = new FlxVector(pos.x, pos.y).angleBetween(targetPos);
 
 		if (Math.abs(angle) >= stompAngleThreshold)
-		{
 			enemy.receiveDamage();
-		}
 		else
-		{
-			// Damage
-			FlxG.state.camera.shake(0.01, 0.1);
-			_invincible = invincible;
-		}
+			onReceiveDamage();
 
+		getImpulse(enemy);
+	}
+
+	public function onHitBullet(bullet:Bullet)
+	{
+		onReceiveDamage();
+		bullet.kill();
+	}
+
+	function onReceiveDamage()
+	{
+		if (_invincible > 0)
+			return;
+		FlxG.state.camera.shake(0.01, 0.1);
+		_invincible = invincible;
+	}
+
+	function getImpulse(target:Entity)
+	{
+		var pos = getMidpoint();
+		var targetPos = target.getMidpoint();
+		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 50).normalize();
 		velocity.x = norm.x * impulse.x;
 		velocity.y = norm.y * impulse.y;
 	}

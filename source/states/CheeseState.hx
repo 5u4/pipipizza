@@ -2,6 +2,7 @@ package states;
 
 import enemies.Cheese;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader.EntityData;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
@@ -10,6 +11,7 @@ import modules.Entity;
 class CheeseState extends BattleState
 {
 	var bricks:FlxTypedGroup<Entity>;
+	var enemyBullets:FlxTypedGroup<FlxSprite>;
 	var spawnInterval = 3.5;
 	var _spawnInterval = 3.0;
 	var brickSpeed = 25.0;
@@ -25,10 +27,20 @@ class CheeseState extends BattleState
 			bricks.add(g);
 		}
 
+		enemyBullets = new FlxTypedGroup<FlxSprite>();
+		for (_ in 0...200)
+		{
+			var bullet = new FlxSprite();
+			bullet.makeGraphic(8, 8, FlxColor.PINK);
+			bullet.kill();
+			enemyBullets.add(bullet);
+		}
+
 		add(bricks);
-		lastSpawnX = FlxG.width / 2;
+		add(enemyBullets);
 
 		super.create();
+		lastSpawnX = FlxG.width / 2;
 	}
 
 	override function update(elapsed:Float)
@@ -38,6 +50,9 @@ class CheeseState extends BattleState
 		super.update(elapsed);
 
 		FlxG.collide(player, bricks);
+		FlxG.collide(player, enemyBullets, (p:Player, b) -> p.onHitBullet(b));
+		FlxG.collide(enemyBullets, bricks, (b:Bullet, w) -> b.kill());
+		FlxG.collide(enemyBullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.collide(bullets, bricks, (b:Bullet, w) -> b.kill());
 	}
 
@@ -52,7 +67,7 @@ class CheeseState extends BattleState
 
 	override function getEnemy():Enemy
 	{
-		return new Cheese(player);
+		return new Cheese(player, () -> enemyBullets.getFirstAvailable());
 	}
 
 	override function getRoom():String

@@ -1,6 +1,7 @@
 package enemies;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
@@ -16,15 +17,18 @@ class Cheese extends Enemy
 	var brain = new StateMachine();
 	var margin = 60.0;
 	var flyTo:FlxPoint = new FlxPoint();
+	var getBullet:() -> FlxSprite;
 
-	public function new(target:Entity)
+	public function new(target:Entity, getBullet:() -> FlxSprite)
 	{
 		super();
 		hp = 100;
 		this.target = target;
+		this.getBullet = getBullet;
 		grav.grav = 0.0;
 
 		brain.states.push(MakeChangeLocationState());
+		brain.states.push(MakeFireState());
 		brain.states.push(MakeIdleState());
 	}
 
@@ -39,11 +43,30 @@ class Cheese extends Enemy
 		super.update(elapsed);
 	}
 
+	function fireCircular(amount:Int)
+	{
+		var center = getMidpoint();
+		var targetCenter = target.getMidpoint();
+		var v = new FlxVector(targetCenter.x - center.x, targetCenter.y - center.y).normalize();
+		var speed = 50.0;
+		var deg = 360.0 / amount;
+		for (_ in 0...amount)
+		{
+			var bullet = getBullet();
+			if (bullet == null)
+				return;
+			bullet.reset(center.x - bullet.width / 2, center.y - bullet.height / 2);
+			bullet.velocity.x = speed * v.x;
+			bullet.velocity.y = speed * v.y;
+			v.rotateByDegrees(deg);
+		}
+	}
+
 	function MakeChangeLocationState()
 	{
 		var state = new State();
 		var timer = new FlxTimer();
-		timer.start();
+		timer.start(3.0);
 		state.shouldEnable = () -> timer.finished;
 		state.enable = () ->
 		{
@@ -55,8 +78,23 @@ class Cheese extends Enemy
 			x = FlxMath.lerp(x, flyTo.x, elapsed);
 			y = FlxMath.lerp(y, flyTo.y, elapsed);
 		};
-		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 1;
-		state.disable = () -> timer.start(1.0);
+		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 5;
+		state.disable = () -> timer.start(3.0);
+		return state;
+	}
+
+	function MakeFireState()
+	{
+		var state = new State();
+		var timer = new FlxTimer();
+		timer.start(0);
+		state.shouldEnable = () -> timer.finished;
+		state.enable = () ->
+		{
+			fireCircular(10);
+			timer.start(0.1);
+		};
+
 		return state;
 	}
 

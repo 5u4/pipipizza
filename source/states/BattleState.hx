@@ -25,7 +25,7 @@ class BattleState extends FlxState
 		add(walls);
 
 		bullets = new FlxTypedGroup<Bullet>(100);
-		for (_ in 1...100)
+		for (_ in 0...100)
 		{
 			var bullet = new Bullet();
 			bullet.kill();
