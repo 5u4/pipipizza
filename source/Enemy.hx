@@ -7,15 +7,14 @@ import modules.platformer.Gravity;
 
 class Enemy extends Entity
 {
-	var grav = 800.0;
-	var maxGrav = 1500.0;
+	var grav = new Gravity();
 	var hp = 100.0;
 
 	public function new()
 	{
 		super();
 		render();
-		addComponent(new Gravity());
+		addComponent(grav);
 	}
 
 	public function render()

@@ -1,5 +1,6 @@
 package states;
 
+import enemies.Cheese;
 import flixel.FlxG;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader.EntityData;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -9,7 +10,7 @@ import modules.Entity;
 class CheeseState extends BattleState
 {
 	var bricks:FlxTypedGroup<Entity>;
-	var spawnInterval = 3.0;
+	var spawnInterval = 3.5;
 	var _spawnInterval = 3.0;
 	var brickSpeed = 25.0;
 	var lastSpawnX = 0.0;
@@ -47,6 +48,11 @@ class CheeseState extends BattleState
 		if (entity.name != "Brick")
 			return;
 		createBrick(entity.x, entity.y);
+	}
+
+	override function getEnemy():Enemy
+	{
+		return new Cheese(player);
 	}
 
 	override function getRoom():String
