@@ -57,11 +57,13 @@ class Player extends Entity
 
 	public function onHitBullet(bullet:Bullet)
 	{
+		if (_invincible > 0)
+			return;
 		onReceiveDamage();
 		bullet.kill();
 	}
 
-	function onReceiveDamage()
+	public function onReceiveDamage()
 	{
 		if (_invincible > 0)
 			return;

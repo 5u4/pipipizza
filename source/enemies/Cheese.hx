@@ -34,7 +34,7 @@ class Cheese extends Enemy
 
 	override function render()
 	{
-		makeGraphic(48, 48, FlxColor.RED);
+		makeGraphic(64, 64, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
@@ -75,10 +75,10 @@ class Cheese extends Enemy
 		};
 		state.handle = elapsed ->
 		{
-			x = FlxMath.lerp(x, flyTo.x, elapsed);
-			y = FlxMath.lerp(y, flyTo.y, elapsed);
+			x = FlxMath.lerp(x, flyTo.x, elapsed * 0.7);
+			y = FlxMath.lerp(y, flyTo.y, elapsed * 0.7);
 		};
-		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 5;
+		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 10;
 		state.disable = () -> timer.start(3.0);
 		return state;
 	}

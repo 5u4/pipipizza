@@ -12,6 +12,7 @@ class CheeseState extends BattleState
 {
 	var bricks:FlxTypedGroup<Entity>;
 	var enemyBullets:FlxTypedGroup<FlxSprite>;
+	var damageZone:FlxSprite;
 	var spawnInterval = 3.5;
 	var _spawnInterval = 3.0;
 	var brickSpeed = 25.0;
@@ -36,8 +37,14 @@ class CheeseState extends BattleState
 			enemyBullets.add(bullet);
 		}
 
+		damageZone = new FlxSprite();
+		damageZone.makeGraphic(FlxG.width, 1);
+		damageZone.screenCenter(X);
+		damageZone.y = FlxG.height - 1;
+
 		add(bricks);
 		add(enemyBullets);
+		add(damageZone);
 
 		super.create();
 		lastSpawnX = FlxG.width / 2;
@@ -50,10 +57,11 @@ class CheeseState extends BattleState
 		super.update(elapsed);
 
 		FlxG.collide(player, bricks);
-		FlxG.collide(player, enemyBullets, (p:Player, b) -> p.onHitBullet(b));
+		FlxG.overlap(player, enemyBullets, (p:Player, b) -> p.onHitBullet(b));
 		FlxG.collide(enemyBullets, bricks, (b:Bullet, w) -> b.kill());
 		FlxG.collide(enemyBullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.collide(bullets, bricks, (b:Bullet, w) -> b.kill());
+		FlxG.overlap(player, damageZone, (p, d) -> reSpawnPlayer());
 	}
 
 	override function onLoadEntity(entity:EntityData)
@@ -127,12 +135,19 @@ class CheeseState extends BattleState
 		brick.screenCenter(X);
 		var offset = (Math.random() * 2 - 1) * 70;
 		if (isSecond)
-			offset += (offset > 0 ? 1 : -1) * (Math.random() * 30 + 100);
+			offset += (offset > 0 ? 1 : -1) * (Math.random() * 60 + 70);
 		brick.x = lastSpawnX + offset;
 		if ((brick.x + brick.width) >= FlxG.width)
 			brick.x -= 2 * offset;
 		else if (brick.x <= 0)
 			brick.x -= 2 * offset;
 		lastSpawnX = brick.x;
+	}
+
+	function reSpawnPlayer()
+	{
+		player.onReceiveDamage();
+		player.x = lastSpawnX;
+		player.y = 0;
 	}
 }
