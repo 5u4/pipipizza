@@ -3,7 +3,6 @@ package states;
 import enemies.Cheese;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.editors.ogmo.FlxOgmo3Loader.EntityData;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import modules.Entity;
@@ -17,6 +16,7 @@ class CheeseState extends BattleState
 	var _spawnInterval = 2.8;
 	var brickSpeed = 75.0;
 	var lastSpawnX = 0.0;
+	var spawnCenter = true;
 
 	override function create()
 	{
@@ -45,6 +45,7 @@ class CheeseState extends BattleState
 		add(bricks);
 		add(enemyBullets);
 		add(damageZone);
+		createInitialBricks();
 
 		super.create();
 		lastSpawnX = FlxG.width / 2;
@@ -62,15 +63,6 @@ class CheeseState extends BattleState
 		FlxG.collide(enemyBullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.collide(bullets, bricks, (b:Bullet, w) -> b.kill());
 		FlxG.overlap(player, damageZone, (p, d) -> reSpawnPlayer());
-	}
-
-	override function onLoadEntity(entity:EntityData)
-	{
-		super.onLoadEntity(entity);
-
-		if (entity.name != "Brick")
-			return;
-		createBrick(entity.x, entity.y);
 	}
 
 	override function getEnemy():Enemy
@@ -94,10 +86,19 @@ class CheeseState extends BattleState
 	function createBrick(x:Float, y:Float)
 	{
 		var brick = getBrick();
-		brick.reset(x, y);
-		brick.centerOrigin();
+		brick.reset(x - brick.width / 2, y);
 		brick.velocity.y = brickSpeed;
 		return brick;
+	}
+
+	function createInitialBricks()
+	{
+		var y:Float = FlxG.height;
+		while (y >= 0)
+		{
+			spawnBrick(y);
+			y -= FlxG.height / 4;
+		}
 	}
 
 	function getBrick()
@@ -123,29 +124,28 @@ class CheeseState extends BattleState
 			return;
 		_spawnInterval = spawnInterval + Math.random() * 0.8;
 		spawnBrick();
-		if (Math.random() > 0.4)
-			spawnBrick(true);
 	}
 
-	function spawnBrick(isSecond = false)
+	function spawnBrick(y = 0.0)
 	{
-		var brick = createBrick(0, 0);
-		if (brick == null)
-			return;
-		brick.screenCenter(X);
-		var offset = (Math.random() * 2 - 1) * 110 + 100;
-		if (isSecond)
-			offset += (offset > 0 ? 1 : -1) * (Math.random() * 130 + 150);
-		brick.x = lastSpawnX + offset;
-		if ((brick.x + brick.width) >= FlxG.width || brick.x <= 0)
-			brick.x -= 2 * offset;
-		lastSpawnX = brick.x;
+		if (spawnCenter)
+		{
+			createBrick(FlxG.width / 2, y);
+		}
+		else
+		{
+			var oneThird = FlxG.width / 3;
+			createBrick(oneThird, y);
+			createBrick(oneThird * 2, y);
+		}
+
+		spawnCenter = !spawnCenter;
 	}
 
 	function reSpawnPlayer()
 	{
 		player.onReceiveDamage(true);
-		player.x = lastSpawnX;
+		player.x = FlxG.width / 2;
 		player.y = 0;
 		player.velocity.y = 0;
 	}

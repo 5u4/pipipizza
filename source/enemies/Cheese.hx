@@ -48,7 +48,7 @@ class Cheese extends Enemy
 		var center = getMidpoint();
 		var targetCenter = target.getMidpoint();
 		var v = new FlxVector(targetCenter.x - center.x, targetCenter.y - center.y).normalize();
-		var speed = 150.0;
+		var speed = 100.0;
 		var deg = 360.0 / amount;
 		for (_ in 0...amount)
 		{
@@ -91,8 +91,8 @@ class Cheese extends Enemy
 		state.shouldEnable = () -> timer.finished;
 		state.enable = () ->
 		{
-			fireCircular(15);
-			timer.start(0.1);
+			fireCircular(10);
+			timer.start(0.15);
 		};
 
 		return state;
@@ -103,7 +103,7 @@ class Cheese extends Enemy
 		var state = new State();
 		var timer = new FlxTimer();
 		state.shouldEnable = () -> true;
-		state.enable = () -> timer.start(0.5);
+		state.enable = () -> timer.start();
 		state.shouldDisable = () -> timer.finished;
 		return state;
 	}
