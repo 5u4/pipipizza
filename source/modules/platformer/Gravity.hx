@@ -2,8 +2,8 @@ package modules.platformer;
 
 class Gravity extends Component
 {
-	public var grav = 800.0;
-	public var maxGrav = 1500.0;
+	public var grav = 2800.0;
+	public var maxGrav = 6000.0;
 
 	override function update(elapsed:Float)
 	{

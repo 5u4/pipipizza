@@ -15,20 +15,20 @@ class Hog extends Enemy
 	var chargeCoolDown = 0.3;
 	var _chargeCoolDown = 1.0;
 	var brain = new StateMachine();
-	var impulse = new FlxVector(100.0, 300.0);
+	var impulse = new FlxVector(300.0, 900.0);
 
 	public function new()
 	{
 		super();
 
-		maxVelocity.x = 1000.0;
+		maxVelocity.x = 6000.0;
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeIdleState());
 	}
 
 	override function render()
 	{
-		makeGraphic(256, 256, FlxColor.RED);
+		makeGraphic(176, 176, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
@@ -48,7 +48,7 @@ class Hog extends Enemy
 		super.onHitWall(wall);
 
 		var front = getMidpoint();
-		front.x += (width + 1.0) * if (facing == FlxObject.LEFT) -1.0 else 1.0;
+		front.x += (width / 2.0 + 16.0) * if (facing == FlxObject.LEFT) -1.0 else 1.0;
 
 		var hit = !wall.ray(getMidpoint(), front);
 
@@ -77,7 +77,7 @@ class Hog extends Enemy
 		return state;
 	}
 
-	function MakeChargeState(accel = 300.0)
+	function MakeChargeState(accel = 2400.0)
 	{
 		var state = new State();
 		state.shouldEnable = () -> canCharge();

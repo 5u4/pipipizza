@@ -14,8 +14,8 @@ class CheeseState extends BattleState
 	var enemyBullets:FlxTypedGroup<FlxSprite>;
 	var damageZone:FlxSprite;
 	var spawnInterval = 3.5;
-	var _spawnInterval = 3.0;
-	var brickSpeed = 25.0;
+	var _spawnInterval = 2.8;
+	var brickSpeed = 75.0;
 	var lastSpawnX = 0.0;
 
 	override function create()
@@ -29,10 +29,10 @@ class CheeseState extends BattleState
 		}
 
 		enemyBullets = new FlxTypedGroup<FlxSprite>();
-		for (_ in 0...200)
+		for (_ in 0...400)
 		{
 			var bullet = new FlxSprite();
-			bullet.makeGraphic(8, 8, FlxColor.PINK);
+			bullet.makeGraphic(32, 32, FlxColor.PINK);
 			bullet.kill();
 			enemyBullets.add(bullet);
 		}
@@ -86,7 +86,7 @@ class CheeseState extends BattleState
 	function makeBrick()
 	{
 		var brick = new Entity();
-		brick.makeGraphic(56, 16, FlxColor.GREEN);
+		brick.makeGraphic(224, 32, FlxColor.GREEN);
 		brick.immovable = true;
 		return brick;
 	}
@@ -133,21 +133,20 @@ class CheeseState extends BattleState
 		if (brick == null)
 			return;
 		brick.screenCenter(X);
-		var offset = (Math.random() * 2 - 1) * 70;
+		var offset = (Math.random() * 2 - 1) * 110 + 100;
 		if (isSecond)
-			offset += (offset > 0 ? 1 : -1) * (Math.random() * 60 + 70);
+			offset += (offset > 0 ? 1 : -1) * (Math.random() * 130 + 150);
 		brick.x = lastSpawnX + offset;
-		if ((brick.x + brick.width) >= FlxG.width)
-			brick.x -= 2 * offset;
-		else if (brick.x <= 0)
+		if ((brick.x + brick.width) >= FlxG.width || brick.x <= 0)
 			brick.x -= 2 * offset;
 		lastSpawnX = brick.x;
 	}
 
 	function reSpawnPlayer()
 	{
-		player.onReceiveDamage();
+		player.onReceiveDamage(true);
 		player.x = lastSpawnX;
 		player.y = 0;
+		player.velocity.y = 0;
 	}
 }

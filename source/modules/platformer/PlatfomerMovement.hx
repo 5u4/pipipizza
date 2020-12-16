@@ -7,7 +7,7 @@ import flixel.math.FlxMath;
 class PlatformerMovement extends Component
 {
 	public var speedScale = 1.0;
-	public var hspeed = 150.0;
+	public var hspeed = 325.0;
 	public var xweight = 0.2;
 	public var moveIntention = () -> 0;
 

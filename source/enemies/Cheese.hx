@@ -15,14 +15,14 @@ class Cheese extends Enemy
 {
 	var target:Entity;
 	var brain = new StateMachine();
-	var margin = 60.0;
+	var margin = 240.0;
 	var flyTo:FlxPoint = new FlxPoint();
 	var getBullet:() -> FlxSprite;
 
 	public function new(target:Entity, getBullet:() -> FlxSprite)
 	{
 		super();
-		hp = 100;
+		hp = 200;
 		this.target = target;
 		this.getBullet = getBullet;
 		grav.grav = 0.0;
@@ -34,7 +34,7 @@ class Cheese extends Enemy
 
 	override function render()
 	{
-		makeGraphic(64, 64, FlxColor.RED);
+		makeGraphic(192, 192, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
@@ -48,7 +48,7 @@ class Cheese extends Enemy
 		var center = getMidpoint();
 		var targetCenter = target.getMidpoint();
 		var v = new FlxVector(targetCenter.x - center.x, targetCenter.y - center.y).normalize();
-		var speed = 50.0;
+		var speed = 150.0;
 		var deg = 360.0 / amount;
 		for (_ in 0...amount)
 		{
@@ -71,14 +71,14 @@ class Cheese extends Enemy
 		state.enable = () ->
 		{
 			flyTo.x = x > FlxG.width / 2 ? margin : FlxG.width - margin - width;
-			flyTo.y = Math.random() * 240.0 + 64.0;
+			flyTo.y = Math.random() * 480.0 + 64.0;
 		};
 		state.handle = elapsed ->
 		{
 			x = FlxMath.lerp(x, flyTo.x, elapsed * 0.7);
 			y = FlxMath.lerp(y, flyTo.y, elapsed * 0.7);
 		};
-		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 10;
+		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 30;
 		state.disable = () -> timer.start(3.0);
 		return state;
 	}
@@ -91,7 +91,7 @@ class Cheese extends Enemy
 		state.shouldEnable = () -> timer.finished;
 		state.enable = () ->
 		{
-			fireCircular(10);
+			fireCircular(15);
 			timer.start(0.1);
 		};
 
@@ -103,7 +103,7 @@ class Cheese extends Enemy
 		var state = new State();
 		var timer = new FlxTimer();
 		state.shouldEnable = () -> true;
-		state.enable = () -> timer.start();
+		state.enable = () -> timer.start(0.5);
 		state.shouldDisable = () -> timer.finished;
 		return state;
 	}

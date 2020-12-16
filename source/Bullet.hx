@@ -8,10 +8,10 @@ class Bullet extends Entity
 	public function new()
 	{
 		super();
-		makeGraphic(4, 4, FlxColor.YELLOW);
+		makeGraphic(16, 16, FlxColor.YELLOW);
 	}
 
-	public function fire(x:Float, y:Float, direction:Int, speed:Float = 250)
+	public function fire(x:Float, y:Float, direction:Int, speed:Float = 750)
 	{
 		reset(x, y);
 		velocity.x = direction * speed;

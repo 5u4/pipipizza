@@ -14,12 +14,13 @@ class Tomato extends Enemy
 	var target:Entity;
 	var brain = new StateMachine();
 	var lastXVelocity = 0.0;
+	var jumpForce = 900.0;
 
 	public function new(target:Entity)
 	{
 		super();
 		this.target = target;
-		hp = 30;
+		hp = 45;
 
 		brain.states.push(MakeJumpAttackState());
 		brain.states.push(MakeIdleState());
@@ -27,7 +28,7 @@ class Tomato extends Enemy
 
 	override function render()
 	{
-		makeGraphic(32, 32, FlxColor.RED);
+		makeGraphic(88, 88, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
@@ -41,7 +42,7 @@ class Tomato extends Enemy
 		super.onHitWall(wall);
 
 		var front = getMidpoint();
-		front.x += (width + 1.0) * (facing == FlxObject.LEFT ? -1.0 : 1.0);
+		front.x += (width / 2.0 + 16.0) * (facing == FlxObject.LEFT ? -1.0 : 1.0);
 
 		var hit = !wall.ray(getMidpoint(), front);
 
@@ -63,10 +64,10 @@ class Tomato extends Enemy
 			var pos = getMidpoint();
 			var tarPos = target.getMidpoint();
 			var norm = new FlxVector(tarPos.x - pos.x, tarPos.y - pos.y).normalize();
-			var force = 270.0 + 30.0 * Math.random();
+			var force = jumpForce + 100.0 * Math.random();
 			norm.x *= Math.random() > 0.3 ? 1.0 : -0.7;
 			velocity.x = norm.x * force;
-			velocity.y = norm.y * force - 320.0;
+			velocity.y = norm.y * force - 1200.0;
 			lastXVelocity = velocity.x;
 			if (norm.x < 0)
 				facing = FlxObject.LEFT;
@@ -88,7 +89,7 @@ class Tomato extends Enemy
 		var state = new State();
 		var timer = new FlxTimer();
 		state.shouldEnable = () -> true;
-		state.enable = () -> timer.start();
+		state.enable = () -> timer.start(Math.random());
 		state.shouldDisable = () -> timer.finished;
 		return state;
 	}

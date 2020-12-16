@@ -14,7 +14,7 @@ class Player extends Entity
 	var invincible = 1.0;
 	var _invincible = 0.0;
 	var stompAngleThreshold = 130.0;
-	var impulse = new FlxVector(1200.0, 400.0);
+	var impulse = new FlxVector(4800.0, 1200.0);
 	var charge = 0.0;
 	var chargeAttackThreshold = 1.0;
 	var chargeInitiateThreshold = 0.2;
@@ -26,7 +26,7 @@ class Player extends Entity
 	{
 		super();
 		this.bullets = bullets;
-		makeGraphic(128, 128, FlxColor.BLUE);
+		makeGraphic(88, 88, FlxColor.BLUE);
 		controller = new PlatformerController();
 		addComponent(controller);
 	}
@@ -63,9 +63,9 @@ class Player extends Entity
 		bullet.kill();
 	}
 
-	public function onReceiveDamage()
+	public function onReceiveDamage(ignoreInvincible = false)
 	{
-		if (_invincible > 0)
+		if (_invincible > 0 && !ignoreInvincible)
 			return;
 		FlxG.state.camera.shake(0.01, 0.1);
 		_invincible = invincible;
@@ -75,7 +75,7 @@ class Player extends Entity
 	{
 		var pos = getMidpoint();
 		var targetPos = target.getMidpoint();
-		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 50).normalize();
+		var norm = new FlxVector(pos.x - targetPos.x, pos.y - targetPos.y - 200).normalize();
 		velocity.x = norm.x * impulse.x;
 		velocity.y = norm.y * impulse.y;
 	}
