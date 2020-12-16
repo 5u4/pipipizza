@@ -38,7 +38,7 @@ class CheeseState extends BattleState
 		}
 
 		damageZone = new FlxSprite();
-		damageZone.makeGraphic(FlxG.width, 1);
+		damageZone.makeGraphic(FlxG.width, 1, FlxColor.TRANSPARENT);
 		damageZone.screenCenter(X);
 		damageZone.y = FlxG.height - 1;
 

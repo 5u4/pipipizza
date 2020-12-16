@@ -1,7 +1,6 @@
 package;
 
 import flixel.tile.FlxTilemap;
-import flixel.util.FlxColor;
 import modules.Entity;
 import modules.platformer.Gravity;
 
@@ -17,10 +16,7 @@ class Enemy extends Entity
 		addComponent(grav);
 	}
 
-	public function render()
-	{
-		makeGraphic(56, 56, FlxColor.RED);
-	}
+	public function render() {}
 
 	override function update(elapsed:Float)
 	{

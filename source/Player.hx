@@ -26,7 +26,7 @@ class Player extends Entity
 	{
 		super();
 		this.bullets = bullets;
-		makeGraphic(32, 32, FlxColor.BLUE);
+		makeGraphic(128, 128, FlxColor.BLUE);
 		controller = new PlatformerController();
 		addComponent(controller);
 	}

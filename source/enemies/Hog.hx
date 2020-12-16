@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxVector;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import modules.brains.statemachine.State;
 import modules.brains.statemachine.StateMachine;
@@ -23,6 +24,11 @@ class Hog extends Enemy
 		maxVelocity.x = 1000.0;
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeIdleState());
+	}
+
+	override function render()
+	{
+		makeGraphic(256, 256, FlxColor.RED);
 	}
 
 	override function update(elapsed:Float)
