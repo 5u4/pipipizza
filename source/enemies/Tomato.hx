@@ -65,7 +65,7 @@ class Tomato extends Enemy
 			var tarPos = target.getMidpoint();
 			var norm = new FlxVector(tarPos.x - pos.x, tarPos.y - pos.y).normalize();
 			var force = jumpForce + 100.0 * Math.random();
-			norm.x *= Math.random() > 0.3 ? 1.0 : -0.7;
+			norm.x *= Math.random() > 0.2 ? 1.0 : -0.7;
 			velocity.x = norm.x * force;
 			velocity.y = norm.y * force - 1200.0;
 			lastXVelocity = velocity.x;
