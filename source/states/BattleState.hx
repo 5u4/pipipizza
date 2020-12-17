@@ -53,6 +53,9 @@ class BattleState extends FlxState
 		FlxG.overlap(player, enemies, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
 		FlxG.overlap(bullets, enemies, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
+
+		if (FlxG.keys.anyJustPressed([ESCAPE]))
+			FlxG.switchState(new MenuState());
 	}
 
 	function onLoadEntity(entity:EntityData)
