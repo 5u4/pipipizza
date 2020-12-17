@@ -2,6 +2,7 @@ package states;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.effects.particles.FlxEmitter;
@@ -15,6 +16,7 @@ class BattleState extends FlxState
 	var enemies:FlxTypedGroup<Enemy>;
 	var bullets:FlxTypedGroup<Bullet>;
 	var emitters:FlxTypedGroup<FlxEmitter>;
+	var hpHuds:Array<FlxSprite>;
 
 	var map:FlxOgmo3Loader;
 	var walls:FlxTilemap;
@@ -57,12 +59,25 @@ class BattleState extends FlxState
 			emitters.add(emitter);
 		}
 
+		hpHuds = new Array<FlxSprite>();
+		var hpHudX = 24.0;
+		for (_ in 0...player.hp)
+		{
+			var heart = new FlxSprite();
+			heart.makeGraphic(48, 48, FlxColor.LIME);
+			heart.setPosition(hpHudX, 12);
+			hpHudX += heart.width + 12;
+			hpHuds.push(heart);
+		}
+
 		map.loadEntities(onLoadEntity, "entities");
 
 		add(emitters);
 		add(bullets);
 		add(enemies);
 		add(player);
+		for (h in hpHuds)
+			add(h);
 
 		super.create();
 	}
@@ -88,6 +103,25 @@ class BattleState extends FlxState
 
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
 			FlxG.switchState(new MenuState());
+	}
+
+	public function playerHpChange()
+	{
+		drawHp();
+		if (player.hp > 0)
+			return;
+		lost();
+	}
+
+	function lost()
+	{
+		FlxG.switchState(new MenuState());
+	}
+
+	function drawHp()
+	{
+		for (i => h in hpHuds)
+			h.color = i < player.hp ? FlxColor.LIME : FlxColor.GRAY;
 	}
 
 	function spawnParticleAt(x:Float, y:Float)

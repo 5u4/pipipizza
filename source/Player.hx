@@ -7,9 +7,12 @@ import flixel.math.FlxVector;
 import flixel.util.FlxColor;
 import modules.Entity;
 import modules.platformer.PlatformerController;
+import states.BattleState;
 
 class Player extends Entity
 {
+	public var hp = 3;
+
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
 	var _invincible = 0.0;
@@ -70,6 +73,8 @@ class Player extends Entity
 			return;
 		FlxG.state.camera.shake(0.01, 0.1);
 		_invincible = invincible;
+		hp -= 1;
+		cast(FlxG.state, BattleState).playerHpChange();
 	}
 
 	function getImpulse(target:Entity)
