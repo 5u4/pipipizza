@@ -29,6 +29,7 @@ class Player extends Entity
 		makeGraphic(88, 88, FlxColor.BLUE);
 		controller = new PlatformerController();
 		addComponent(controller);
+		solid = true;
 	}
 
 	override function update(elapsed:Float)

@@ -13,6 +13,7 @@ class Enemy extends Entity
 	{
 		super();
 		render();
+		solid = true;
 		addComponent(grav);
 	}
 

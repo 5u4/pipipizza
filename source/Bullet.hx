@@ -1,5 +1,7 @@
 package;
 
+import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
 import flixel.util.FlxColor;
 import modules.Entity;
 

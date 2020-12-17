@@ -4,14 +4,17 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
 
 class BattleState extends FlxState
 {
 	var player:Player;
 	var enemies:FlxTypedGroup<Enemy>;
 	var bullets:FlxTypedGroup<Bullet>;
+	var emitters:FlxTypedGroup<FlxEmitter>;
 
 	var map:FlxOgmo3Loader;
 	var walls:FlxTilemap;
@@ -31,15 +34,35 @@ class BattleState extends FlxState
 			bullet.kill();
 			bullets.add(bullet);
 		}
-		add(bullets);
 
 		player = new Player(bullets);
 		enemies = new FlxTypedGroup<Enemy>();
 
-		add(enemies);
-		add(player);
+		emitters = new FlxTypedGroup<FlxEmitter>();
+		for (_ in 0...100)
+		{
+			var emitter = new FlxEmitter(0, 0, 10);
+			emitter.makeParticles(2, 2, FlxColor.WHITE, 10);
+			emitter.launchMode = FlxEmitterMode.SQUARE;
+			emitter.allowCollisions = FlxObject.ANY;
+			// emitter.alpha.start.set(1);
+			// emitter.alpha.end.set(0.3);
+			emitter.acceleration.start.min.y = -100;
+			emitter.acceleration.end.min.y = 500;
+			emitter.acceleration.end.max.y = 800;
+			emitter.velocity.set(-400, -100, 400, 200, 0, 0, 0, 0);
+			emitter.elasticity.set(0.5, 0.7, 0.1, 0.1);
+			emitter.lifespan.set(0.5, 0.8);
+			emitter.scale.set(8, 8, 6, 6, 0, 0, 0, 0);
+			emitters.add(emitter);
+		}
 
 		map.loadEntities(onLoadEntity, "entities");
+
+		add(emitters);
+		add(bullets);
+		add(enemies);
+		add(player);
 
 		super.create();
 	}
@@ -51,11 +74,27 @@ class BattleState extends FlxState
 		FlxG.collide(player, walls);
 		FlxG.collide(enemies, walls, (e:Enemy, w) -> e.onHitWall(w));
 		FlxG.overlap(player, enemies, (p:Player, e:Enemy) -> p.onHitEnemy(e));
-		FlxG.collide(bullets, walls, (b:Bullet, w) -> b.kill());
-		FlxG.overlap(bullets, enemies, (b:Bullet, e:Enemy) -> e.onHitBullet(b));
+		FlxG.collide(bullets, walls, (b:Bullet, w:FlxTilemap) ->
+		{
+			spawnParticleAt(b.x, b.y);
+			b.kill();
+		});
+		FlxG.overlap(bullets, enemies, (b:Bullet, e:Enemy) ->
+		{
+			spawnParticleAt(b.x, b.y);
+			e.onHitBullet(b);
+		});
+		FlxG.collide(emitters, walls);
 
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
 			FlxG.switchState(new MenuState());
+	}
+
+	function spawnParticleAt(x:Float, y:Float)
+	{
+		var emitter = emitters.recycle();
+		emitter.setPosition(x, y);
+		emitter.start(true, 0.1, 10);
 	}
 
 	function onLoadEntity(entity:EntityData)
