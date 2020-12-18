@@ -17,6 +17,9 @@ class CheeseState extends BattleState
 	var brickSpeed = 75.0;
 	var lastSpawnX = 0.0;
 	var spawnCenter = true;
+	var bgTile1:FlxSprite;
+	var bgTile2:FlxSprite;
+	var bgTile3:FlxSprite;
 
 	override function create()
 	{
@@ -42,18 +45,38 @@ class CheeseState extends BattleState
 		damageZone.screenCenter(X);
 		damageZone.y = FlxG.height - 1;
 
-		add(bricks);
-		add(enemyBullets);
-		add(damageZone);
-		createInitialBricks();
+		makeBgTiles();
 
 		super.create();
+
+		createInitialBricks();
+
 		lastSpawnX = FlxG.width / 2;
+	}
+
+	override function addLayers()
+	{
+		add(damageZone);
+		add(backgrounds);
+		add(bgTile1);
+		add(bgTile2);
+		add(bgTile3);
+		add(collisions);
+		add(bricks);
+		add(emitters);
+		add(enemyBullets);
+		add(bullets);
+		add(enemies);
+		add(player);
+		add(foregrounds);
+		for (h in hpHuds)
+			add(h);
 	}
 
 	override function update(elapsed:Float)
 	{
 		brickSpawner(elapsed);
+		updateBgTiles();
 
 		super.update(elapsed);
 
@@ -75,10 +98,34 @@ class CheeseState extends BattleState
 		return AssetPaths.room3__json;
 	}
 
+	function makeBgTiles()
+	{
+		bgTile1 = new FlxSprite(0, -864);
+		bgTile1.loadGraphic(AssetPaths.stove_tiles__png, 1920, 864);
+		bgTile1.velocity.y = brickSpeed * 0.5;
+		bgTile2 = new FlxSprite(0, 0);
+		bgTile2.loadGraphic(AssetPaths.stove_tiles__png, 1920, 864);
+		bgTile2.velocity.y = brickSpeed * 0.5;
+		bgTile3 = new FlxSprite(0, 864);
+		bgTile3.loadGraphic(AssetPaths.stove_tiles__png, 1920, 864);
+		bgTile3.velocity.y = brickSpeed * 0.5;
+	}
+
+	function updateBgTiles()
+	{
+		for (t in [bgTile1, bgTile2, bgTile3])
+		{
+			if (t.y <= FlxG.height)
+				continue;
+			t.y -= 864 * 3;
+			return;
+		}
+	}
+
 	function makeBrick()
 	{
 		var brick = new Entity();
-		brick.makeGraphic(224, 32, FlxColor.GREEN);
+		brick.loadGraphic(AssetPaths.stove_platform__png);
 		brick.immovable = true;
 		return brick;
 	}

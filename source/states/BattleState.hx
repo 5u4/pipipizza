@@ -57,7 +57,7 @@ class BattleState extends FlxState
 			emitter.acceleration.start.min.y = -100;
 			emitter.acceleration.end.min.y = 500;
 			emitter.acceleration.end.max.y = 800;
-			emitter.velocity.set(-250, -400, 250, 100, 0, 0, 0, 0);
+			emitter.velocity.set(-250, -400, 250, 300, 0, 0, 0, 0);
 			emitter.elasticity.set(0.5, 0.7, 0.1, 0.1);
 			emitter.lifespan.set(0.5, 0.8);
 			emitter.scale.set(8, 8, 6, 6, 0, 0, 0, 0);
@@ -82,15 +82,7 @@ class BattleState extends FlxState
 		addBounds();
 		prevPx = player.x;
 
-		add(backgrounds);
-		add(collisions);
-		add(emitters);
-		add(bullets);
-		add(enemies);
-		add(player);
-		add(foregrounds);
-		for (h in hpHuds)
-			add(h);
+		addLayers();
 
 		super.create();
 	}
@@ -117,6 +109,19 @@ class BattleState extends FlxState
 
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
 			FlxG.switchState(new MenuState());
+	}
+
+	function addLayers()
+	{
+		add(backgrounds);
+		add(collisions);
+		add(emitters);
+		add(bullets);
+		add(enemies);
+		add(player);
+		add(foregrounds);
+		for (h in hpHuds)
+			add(h);
 	}
 
 	function updateBgX(bg:FlxSprite, weight = -0.1)
@@ -212,6 +217,29 @@ class BattleState extends FlxState
 				var e = new FlxSprite(entity.x, entity.y);
 				e.loadGraphic(AssetPaths.barn_platform_deco__png, false, entity.width, entity.height);
 				backgrounds.add(e);
+			case "fire":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.fire__png, false, entity.width, entity.height);
+				foregrounds.add(e);
+			case "stove_bg":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.stove_bg__png, false, entity.width, entity.height);
+				backgrounds.add(e);
+			case "stove_fg":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.stove_fg__png, false, entity.width, entity.height);
+				foregrounds.add(e);
+			case "stove_platform":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.stove_platform__png, false, entity.width, entity.height);
+				e.solid = true;
+				e.immovable = true;
+				collisions.add(e);
+			case "stove_wall":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.stove_wall__png, false, entity.width, entity.height);
+				e.flipX = entity.flippedX;
+				foregrounds.add(e);
 		}
 	}
 
