@@ -1,6 +1,6 @@
 package;
 
-import flixel.tile.FlxTilemap;
+import flixel.FlxSprite;
 import modules.Entity;
 import modules.platformer.Gravity;
 
@@ -36,7 +36,7 @@ class Enemy extends Entity
 		receiveDamage();
 	}
 
-	public function onHitWall(wall:FlxTilemap) {}
+	public function onHitWall(wall:FlxSprite) {}
 
 	function deathCheck()
 	{

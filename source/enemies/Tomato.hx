@@ -1,8 +1,9 @@
 package enemies;
 
+import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.math.FlxVector;
-import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import modules.Entity;
@@ -37,14 +38,11 @@ class Tomato extends Enemy
 		super.update(elapsed);
 	}
 
-	override function onHitWall(wall:FlxTilemap)
+	override function onHitWall(wall:FlxSprite)
 	{
 		super.onHitWall(wall);
 
-		var front = getMidpoint();
-		front.x += (width / 2.0 + 16.0) * (facing == FlxObject.LEFT ? -1.0 : 1.0);
-
-		var hit = !wall.ray(getMidpoint(), front);
+		var hit = isTouching(FlxObject.WALL);
 
 		if (hit)
 		{

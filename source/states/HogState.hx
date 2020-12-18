@@ -5,6 +5,15 @@ import flixel.FlxObject;
 
 class HogState extends BattleState
 {
+	override function update(elapsed:Float)
+	{
+		for (bg in movableBgs)
+			updateBgX(bg, -0.02);
+		for (fg in movableFgs)
+			updateBgX(fg, 0.05);
+		super.update(elapsed);
+	}
+
 	override function getEnemy()
 	{
 		var enemy = new Hog();

@@ -2,8 +2,8 @@ package enemies;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.math.FlxVector;
-import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import modules.brains.statemachine.State;
@@ -43,15 +43,11 @@ class Hog extends Enemy
 		handleChargeCoolDown(elapsed);
 	}
 
-	override function onHitWall(wall:FlxTilemap)
+	override function onHitWall(wall:FlxSprite)
 	{
 		super.onHitWall(wall);
 
-		var front = getMidpoint();
-		front.x += (width / 2.0 + 16.0) * if (facing == FlxObject.LEFT) -1.0 else 1.0;
-
-		var hit = !wall.ray(getMidpoint(), front);
-
+		var hit = isTouching(FlxObject.WALL);
 		if (hit)
 			bounce();
 	}
