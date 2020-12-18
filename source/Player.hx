@@ -7,11 +7,12 @@ import flixel.math.FlxVector;
 import flixel.util.FlxColor;
 import modules.Entity;
 import modules.platformer.PlatformerController;
+import openfl8.InvincibleEffect;
 import states.BattleState;
 
 class Player extends Entity
 {
-	public var hp = 3;
+	public var hp = 5;
 
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
@@ -24,6 +25,7 @@ class Player extends Entity
 	var chargeSpeedScale = 0.2;
 	var chargeJumpScale = 0.5;
 	var controller:PlatformerController;
+	var invincibleEffect:InvincibleEffect;
 
 	public function new(bullets:FlxTypedGroup<Bullet>)
 	{
@@ -33,11 +35,14 @@ class Player extends Entity
 		controller = new PlatformerController();
 		addComponent(controller);
 		solid = true;
+		invincibleEffect = new InvincibleEffect();
+		shader = invincibleEffect.shader;
 	}
 
 	override function update(elapsed:Float)
 	{
 		_invincible -= elapsed;
+		handleInvincibleEffect();
 
 		super.update(elapsed);
 		handleShoot(elapsed);
@@ -75,6 +80,14 @@ class Player extends Entity
 		_invincible = invincible;
 		hp -= 1;
 		cast(FlxG.state, BattleState).playerHpChange();
+	}
+
+	function handleInvincibleEffect()
+	{
+		if (_invincible > 0)
+			invincibleEffect.apply();
+		else
+			invincibleEffect.reset();
 	}
 
 	function getImpulse(target:Entity)
