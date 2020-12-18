@@ -63,11 +63,11 @@ class CheeseState extends BattleState
 		add(bgTile3);
 		add(collisions);
 		add(bricks);
-		add(emitters);
 		add(enemyBullets);
 		add(bullets);
 		add(enemies);
 		add(player);
+		add(emitters);
 		add(foregrounds);
 		for (h in hpHuds)
 			add(h);

@@ -115,10 +115,10 @@ class BattleState extends FlxState
 	{
 		add(backgrounds);
 		add(collisions);
-		add(emitters);
 		add(bullets);
 		add(enemies);
 		add(player);
+		add(emitters);
 		add(foregrounds);
 		for (h in hpHuds)
 			add(h);

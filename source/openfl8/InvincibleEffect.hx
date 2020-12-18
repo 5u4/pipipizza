@@ -13,7 +13,7 @@ class InvincibleEffect
 	public function new()
 	{
 		shader = new InvincibleShader();
-		FlxTween.tween(this, {target: 1.0}, 0.1, {type: PINGPONG, ease: FlxEase.quadInOut});
+		FlxTween.tween(this, {target: 0.5}, 0.1, {type: PINGPONG, ease: FlxEase.quadInOut});
 	}
 
 	public function apply()
