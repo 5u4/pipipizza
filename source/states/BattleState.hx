@@ -15,6 +15,7 @@ class BattleState extends FlxState
 	var enemies:FlxTypedGroup<Enemy>;
 	var bullets:FlxTypedGroup<Bullet>;
 	var emitters:FlxTypedGroup<FlxEmitter>;
+	var onHitEmitter:FlxEmitter;
 	var hpHuds:Array<FlxSprite>;
 
 	var map:FlxOgmo3Loader;
@@ -24,6 +25,7 @@ class BattleState extends FlxState
 	var movableBgs:FlxTypedGroup<FlxSprite>;
 	var movableFgs:FlxTypedGroup<FlxSprite>;
 	var prevPx:Float;
+	var _pause = 0.0;
 
 	override public function create()
 	{
@@ -42,7 +44,18 @@ class BattleState extends FlxState
 			bullets.add(bullet);
 		}
 
-		player = new Player(bullets);
+		onHitEmitter = new FlxEmitter(0, 0, 30);
+		onHitEmitter.makeParticles(2, 2, FlxColor.BLACK, 30);
+		// onHitEmitter.launchMode = FlxEmitterMode.SQUARE;
+		// onHitEmitter.velocity.set(-1600, -400, 1600, 400, 0, 0, 0, 0);
+		onHitEmitter.launchMode = FlxEmitterMode.CIRCLE;
+		onHitEmitter.speed.set(-3000, 3000, 0, 0);
+		onHitEmitter.angle.start.min = -90;
+		onHitEmitter.angle.start.max = 90;
+		onHitEmitter.lifespan.set(0.7, 0.9);
+		onHitEmitter.scale.set(48, 48, 64, 64, 0, 0);
+
+		player = new Player(bullets, d -> _pause = d, onHitEmitter);
 		enemies = new FlxTypedGroup<Enemy>();
 
 		emitters = new FlxTypedGroup<FlxEmitter>();
@@ -62,7 +75,7 @@ class BattleState extends FlxState
 			emitter.velocity.set(-250, -400, 250, 300, 0, 0, 0, 0);
 			emitter.elasticity.set(0.5, 0.7, 0.1, 0.1);
 			emitter.lifespan.set(0.5, 0.8);
-			emitter.scale.set(8, 8, 6, 6, 0, 0, 0, 0);
+			emitter.scale.set(8, 8, 16, 16, 0, 0);
 			emitters.add(emitter);
 		}
 
@@ -91,6 +104,10 @@ class BattleState extends FlxState
 
 	override public function update(elapsed:Float)
 	{
+		_pause -= elapsed;
+		if (_pause > 0)
+			return;
+
 		prevPx = player.x;
 		super.update(elapsed);
 
@@ -121,6 +138,7 @@ class BattleState extends FlxState
 		add(enemies);
 		add(player);
 		add(emitters);
+		add(onHitEmitter);
 		add(foregrounds);
 		for (h in hpHuds)
 			add(h);

@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxVector;
 import flixel.util.FlxColor;
@@ -26,8 +27,10 @@ class Player extends Entity
 	var chargeJumpScale = 0.5;
 	var controller:PlatformerController;
 	var invincibleEffect:InvincibleEffect;
+	var onHitEmitter:FlxEmitter;
+	var framePauser:(duration:Float) -> Void;
 
-	public function new(bullets:FlxTypedGroup<Bullet>)
+	public function new(bullets:FlxTypedGroup<Bullet>, framePauser:(duration:Float) -> Void, onHitEmitter:FlxEmitter)
 	{
 		super();
 		this.bullets = bullets;
@@ -37,15 +40,16 @@ class Player extends Entity
 		solid = true;
 		invincibleEffect = new InvincibleEffect();
 		shader = invincibleEffect.shader;
+		this.onHitEmitter = onHitEmitter;
+		this.framePauser = framePauser;
 	}
 
 	override function update(elapsed:Float)
 	{
 		_invincible -= elapsed;
 		handleInvincibleEffect();
-
-		super.update(elapsed);
 		handleShoot(elapsed);
+		super.update(elapsed);
 	}
 
 	public function onHitEnemy(enemy:Enemy)
@@ -76,7 +80,14 @@ class Player extends Entity
 	{
 		if (_invincible > 0 && !ignoreInvincible)
 			return;
+		var center = getMidpoint();
+		onHitEmitter.launchAngle.min = facing == FlxObject.RIGHT ? 0 : -45;
+		onHitEmitter.launchAngle.max = facing == FlxObject.RIGHT ? 45 : 0;
+		onHitEmitter.setPosition(center.x, center.y);
+		onHitEmitter.start(true, 0.1, 30);
+		FlxG.state.camera.flash(0x88888888, 0.1);
 		FlxG.state.camera.shake(0.01, 0.1);
+		framePauser(0.15);
 		_invincible = invincible;
 		hp -= 1;
 		cast(FlxG.state, BattleState).playerHpChange();
