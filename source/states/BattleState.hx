@@ -54,6 +54,8 @@ class BattleState extends FlxState
 			emitter.allowCollisions = FlxObject.ANY;
 			// emitter.alpha.start.set(1);
 			// emitter.alpha.end.set(0.3);
+			emitter.angle.start.min = -90;
+			emitter.angle.start.max = 90;
 			emitter.acceleration.start.min.y = -100;
 			emitter.acceleration.end.min.y = 500;
 			emitter.acceleration.end.max.y = 800;
