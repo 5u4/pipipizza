@@ -262,6 +262,30 @@ class BattleState extends FlxState
 				e.loadGraphic(AssetPaths.stove_wall__png, false, entity.width, entity.height);
 				e.flipX = entity.flippedX;
 				foregrounds.add(e);
+			case "garden_bg":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.garden_bg__jpg, false, entity.width, entity.height);
+				backgrounds.add(e);
+			case "garden_floor":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.garden_floor__png, false, entity.width, entity.height);
+				e.solid = true;
+				e.immovable = true;
+				collisions.add(e);
+			case "garden_wall":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.garden_wall__png, false, entity.width, entity.height);
+				foregrounds.add(e);
+			case "earthworm":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.earthworm__png, false, entity.width, entity.height);
+				foregrounds.add(e);
+				movableFgs.add(e);
+			case "tomato":
+				var e = new FlxSprite(entity.x, entity.y);
+				e.loadGraphic(AssetPaths.garden_deco__png, false, entity.width, entity.height);
+				backgrounds.add(e);
+				movableBgs.add(e);
 		}
 	}
 
