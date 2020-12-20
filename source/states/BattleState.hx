@@ -49,11 +49,13 @@ class BattleState extends FlxState
 		// onHitEmitter.launchMode = FlxEmitterMode.SQUARE;
 		// onHitEmitter.velocity.set(-1600, -400, 1600, 400, 0, 0, 0, 0);
 		onHitEmitter.launchMode = FlxEmitterMode.CIRCLE;
-		onHitEmitter.speed.set(-3000, 3000, 0, 0);
+		onHitEmitter.speed.set(-800, 800, 0, 0);
 		onHitEmitter.angle.start.min = -90;
 		onHitEmitter.angle.start.max = 90;
-		onHitEmitter.lifespan.set(0.7, 0.9);
-		onHitEmitter.scale.set(48, 48, 64, 64, 0, 0);
+		onHitEmitter.launchAngle.min = -180;
+		onHitEmitter.launchAngle.max = 180;
+		onHitEmitter.lifespan.set(0.4, 0.6);
+		onHitEmitter.scale.set(16, 16, 32, 32, 0, 0);
 
 		player = new Player(bullets, d -> _pause = d, onHitEmitter);
 		enemies = new FlxTypedGroup<Enemy>();
