@@ -1,7 +1,6 @@
 package openfl8;
 
 import flixel.system.FlxAssets.FlxShader;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 class InvincibleEffect
@@ -13,7 +12,7 @@ class InvincibleEffect
 	public function new()
 	{
 		shader = new InvincibleShader();
-		FlxTween.tween(this, {target: 0.5}, 0.1, {type: PINGPONG, ease: FlxEase.quadInOut});
+		FlxTween.tween(this, {target: 0.8}, 0.1, {type: PINGPONG});
 	}
 
 	public function apply()
@@ -37,8 +36,12 @@ class InvincibleShader extends FlxShader
         void main()
         {
 			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-            gl_FragColor = vec4(color.rgb + target, color.a);
-        }
+			vec3 flash = color.rgb;
+			if (flash.r > 0.0) flash.r = 1.0;
+			if (flash.g > 0.0) flash.g = 1.0;
+			if (flash.b > 0.0) flash.b = 1.0;
+            gl_FragColor = vec4(color.rgb - flash.rgb * target, color.a);
+		}
     ')
 	public function new()
 	{

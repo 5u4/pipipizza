@@ -61,7 +61,6 @@ class Player extends Entity
 		super.update(elapsed);
 		handleInvincibleEffect();
 		handleShoot(elapsed);
-		trace(animation.name);
 	}
 
 	public function onHitEnemy(enemy:Enemy)
