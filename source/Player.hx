@@ -39,7 +39,7 @@ class Player extends Entity
 		setFacingFlip(FlxObject.RIGHT, false, false);
 
 		animation.add("idle", [0, 1], 6, true);
-		animation.add("run", [2, 3, 4, 5, 6], 15, true);
+		animation.add("run", [1, 2, 3, 4, 5, 6], 4, true);
 		animation.add("jump", [7], 6, false);
 		animation.add("shoot", [8], 6, false);
 		animation.add("charge", [9, 10, 11, 12], 4, false);
