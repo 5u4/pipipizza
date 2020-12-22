@@ -31,9 +31,9 @@ class Enemy extends Entity
 		super.update(elapsed);
 	}
 
-	public function receiveDamage()
+	public function receiveDamage(amount = 1)
 	{
-		health -= 1 / hp;
+		health = Math.max(0, health - amount / hp);
 		flashEffect.apply();
 		onHit();
 		deathCheck();
@@ -42,7 +42,7 @@ class Enemy extends Entity
 	public function onHitBullet(bullet:Bullet)
 	{
 		bullet.kill();
-		receiveDamage();
+		receiveDamage(bullet.scale.x == 1 ? 1 : 15);
 	}
 
 	public function onHitWall(wall:FlxSprite) {}

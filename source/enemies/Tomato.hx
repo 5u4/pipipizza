@@ -19,7 +19,7 @@ class Tomato extends Enemy
 	{
 		super();
 		this.target = target;
-		hp = 45;
+		hp = 50;
 
 		brain.states.push(MakeJumpAttackState());
 		brain.states.push(MakeIdleState());

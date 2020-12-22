@@ -25,7 +25,7 @@ class Cheese extends Enemy
 	public function new(target:Entity, getBullet:() -> FlxSprite)
 	{
 		super();
-		hp = 200;
+		hp = 250;
 		this.target = target;
 		this.getBullet = getBullet;
 		grav.grav = 0.0;

@@ -21,6 +21,7 @@ class Hog extends Enemy
 	{
 		super();
 
+		hp = 100;
 		maxVelocity.x = 6000.0;
 		brain.states.push(MakeStunState());
 		brain.states.push(MakeChargeState());
