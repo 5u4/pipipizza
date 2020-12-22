@@ -34,7 +34,7 @@ class Player extends Entity
 	{
 		super();
 		this.bullets = bullets;
-		loadGraphic(AssetPaths.player__png, true, 88, 88);
+		loadGraphic(AssetPaths.player__png, true, 88, 74);
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 
