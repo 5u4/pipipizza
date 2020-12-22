@@ -3,13 +3,13 @@ package states;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 
-class BattleState extends FlxState
+class BattleState extends FlxTransitionableState
 {
 	var player:Player;
 	var enemies:FlxTypedGroup<Enemy>;
@@ -163,6 +163,10 @@ class BattleState extends FlxState
 
 	function lost()
 	{
+		player.controller.movement.moveIntention = () -> 0;
+		player.controller.jump.jumpIntention = () -> false;
+		player.controller.jump.jumpHoldIntention = () -> false;
+
 		FlxG.switchState(new MenuState());
 	}
 

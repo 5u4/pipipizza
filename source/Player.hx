@@ -15,6 +15,7 @@ class Player extends Entity
 	public var hp = 5;
 	public var charge = 0.0;
 	public var attackFrames = 0.0;
+	public var controller:PlatformerController;
 
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
@@ -25,7 +26,6 @@ class Player extends Entity
 	var chargeInitiateThreshold = 0.2;
 	var chargeSpeedScale = 0.2;
 	var chargeJumpScale = 0.5;
-	var controller:PlatformerController;
 	var invincibleEffect:InvincibleEffect;
 	var onHitEmitter:FlxEmitter;
 	var framePauser:(duration:Float) -> Void;

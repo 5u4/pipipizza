@@ -1,19 +1,33 @@
 package states;
 
 import flixel.FlxG;
-import flixel.FlxState;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.TransitionData;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 
-class MenuState extends FlxState
+class MenuState extends FlxTransitionableState
 {
+	var initialized = false;
 	var titleText:FlxText;
 	var lv1Button:FlxButton;
 	var lv2Button:FlxButton;
 	var lv3Button:FlxButton;
 
+	function init()
+	{
+		if (initialized)
+			return;
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK);
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK);
+		initialized = true;
+	}
+
 	override function create()
 	{
+		init();
+
 		titleText = new FlxText(0, 0, 0, "GAME", 22);
 		titleText.alignment = CENTER;
 		titleText.screenCenter(X);
