@@ -11,6 +11,8 @@ class Enemy extends Entity
 	var hp = 100.0;
 	var flashEffect:FlashEffect;
 
+	public var onHit:Void->Void;
+
 	public function new()
 	{
 		super();
@@ -33,6 +35,7 @@ class Enemy extends Entity
 	{
 		health -= 1 / hp;
 		flashEffect.apply();
+		onHit();
 		deathCheck();
 	}
 

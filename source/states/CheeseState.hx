@@ -70,6 +70,7 @@ class CheeseState extends BattleState
 		add(emitters);
 		add(onHitEmitter);
 		add(foregrounds);
+		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
 	}

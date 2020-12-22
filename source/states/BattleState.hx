@@ -17,6 +17,7 @@ class BattleState extends FlxTransitionableState
 	var emitters:FlxTypedGroup<FlxEmitter>;
 	var onHitEmitter:FlxEmitter;
 	var hpHuds:Array<FlxSprite>;
+	var enemyHp:HpHud;
 
 	var map:FlxOgmo3Loader;
 	var foregrounds:FlxTypedGroup<FlxSprite>;
@@ -88,9 +89,12 @@ class BattleState extends FlxTransitionableState
 			var heart = new FlxSprite();
 			heart.makeGraphic(48, 48, FlxColor.LIME);
 			heart.setPosition(hpHudX, 12);
+			heart.scrollFactor.set(0, 0);
 			hpHudX += heart.width + 12;
 			hpHuds.push(heart);
 		}
+
+		enemyHp = new HpHud(enemies);
 
 		map.loadEntities(onLoadEntity, "backgrounds");
 		map.loadEntities(onLoadEntity, "collisions");
@@ -142,6 +146,7 @@ class BattleState extends FlxTransitionableState
 		add(emitters);
 		add(onHitEmitter);
 		add(foregrounds);
+		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
 	}
@@ -210,6 +215,7 @@ class BattleState extends FlxTransitionableState
 			case "enemy":
 				var enemy = getEnemy();
 				enemy.setPosition(entity.x, entity.y);
+				enemy.onHit = () -> enemyHp.damaged();
 				enemies.add(enemy);
 			case "barn_bg":
 				var e = new FlxSprite(entity.x, entity.y);
