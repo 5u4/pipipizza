@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import modules.brains.statemachine.State;
 import modules.brains.statemachine.StateMachine;
@@ -16,19 +15,28 @@ class Hog extends Enemy
 	var _chargeCoolDown = 1.0;
 	var brain = new StateMachine();
 	var impulse = new FlxVector(300.0, 900.0);
+	var isStun = false;
 
 	public function new()
 	{
 		super();
 
 		maxVelocity.x = 6000.0;
+		brain.states.push(MakeStunState());
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeIdleState());
 	}
 
 	override function render()
 	{
-		makeGraphic(176, 176, FlxColor.RED);
+		loadGraphic(AssetPaths.hog__png, true, 176, 176);
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
+
+		animation.add("idle", [0, 1], 6, true);
+		animation.add("run", [2, 3, 4], 15, true);
+		animation.add("hit", [5], 6, false);
+		animation.add("pause", [6, 7, 8], 6, true);
 	}
 
 	override function update(elapsed:Float)
@@ -38,8 +46,8 @@ class Hog extends Enemy
 			velocity.x = 0;
 			velocity.y = 0;
 		}
-		super.update(elapsed);
 		brain.update(elapsed);
+		super.update(elapsed);
 		handleChargeCoolDown(elapsed);
 	}
 
@@ -63,12 +71,32 @@ class Hog extends Enemy
 		return _chargeCoolDown <= 0.0;
 	}
 
+	function MakeStunState()
+	{
+		var state = new State();
+		var timer = new FlxTimer();
+		state.shouldEnable = () -> isStun;
+		state.enable = () -> timer.start(Math.random() + 1);
+		state.handle = _ -> animation.play(isTouching(FlxObject.FLOOR) ? "pause" : "hit");
+		state.shouldDisable = () -> timer.finished;
+		state.disable = () ->
+		{
+			facing = if (facing == FlxObject.LEFT) FlxObject.RIGHT else FlxObject.LEFT;
+			isStun = false;
+		}
+		return state;
+	}
+
 	function MakeIdleState()
 	{
 		var state = new State();
 		var timer = new FlxTimer();
 		state.shouldEnable = () -> true;
-		state.enable = () -> timer.start();
+		state.enable = () ->
+		{
+			animation.play("idle");
+			timer.start(2);
+		};
 		state.shouldDisable = () -> timer.finished;
 		return state;
 	}
@@ -79,6 +107,7 @@ class Hog extends Enemy
 		state.shouldEnable = () -> canCharge();
 		state.enable = () ->
 		{
+			animation.play("run");
 			acceleration.x = accel * (facing == FlxObject.LEFT ? -1.0 : 1.0);
 			isCharging = true;
 		}
@@ -93,6 +122,7 @@ class Hog extends Enemy
 
 	function bounce()
 	{
+		isStun = true;
 		FlxG.state.camera.shake(0.005, 0.1);
 		_chargeCoolDown = chargeCoolDown;
 		acceleration.x = 0;
@@ -101,7 +131,5 @@ class Hog extends Enemy
 
 		velocity.x = -impulse.x * dir;
 		velocity.y = -impulse.y;
-
-		facing = if (facing == FlxObject.LEFT) FlxObject.RIGHT else FlxObject.LEFT;
 	}
 }

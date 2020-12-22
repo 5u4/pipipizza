@@ -36,11 +36,7 @@ class InvincibleShader extends FlxShader
         void main()
         {
 			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-			vec3 flash = color.rgb;
-			if (flash.r > 0.0) flash.r = 1.0;
-			if (flash.g > 0.0) flash.g = 1.0;
-			if (flash.b > 0.0) flash.b = 1.0;
-            gl_FragColor = vec4(color.rgb - flash.rgb * target, color.a);
+            gl_FragColor = vec4(color.rgb - color.a * target, color.a);
 		}
     ')
 	public function new()

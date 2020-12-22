@@ -19,7 +19,7 @@ class FlashEffect
 
 	public function apply()
 	{
-		target = 0.5;
+		target = 0.8;
 
 		if (tween != null)
 		{
@@ -44,8 +44,8 @@ class FlashShader extends FlxShader
 
         void main()
         {
-            vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-            gl_FragColor = vec4(color.rgb + target, color.a);
+			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
+            gl_FragColor = vec4(color.rgb + color.a * target, color.a);
         }
     ')
 	public function new()
