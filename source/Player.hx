@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxVector;
-import flixel.util.FlxColor;
 import modules.Entity;
 import modules.platformer.PlatformerController;
 import openfl8.InvincibleEffect;
@@ -14,13 +13,14 @@ import states.BattleState;
 class Player extends Entity
 {
 	public var hp = 5;
+	public var charge = 0.0;
+	public var attackFrames = 0.0;
 
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
 	var _invincible = 0.0;
 	var stompAngleThreshold = 130.0;
 	var impulse = new FlxVector(4800.0, 1200.0);
-	var charge = 0.0;
 	var chargeAttackThreshold = 1.0;
 	var chargeInitiateThreshold = 0.2;
 	var chargeSpeedScale = 0.2;
@@ -34,7 +34,17 @@ class Player extends Entity
 	{
 		super();
 		this.bullets = bullets;
-		makeGraphic(88, 88, FlxColor.BLUE);
+		loadGraphic(AssetPaths.player__png, true, 88, 88);
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
+
+		animation.add("idle", [0, 1], 6, true);
+		animation.add("run", [2, 3, 4, 5, 6], 15, true);
+		animation.add("jump", [7], 6, false);
+		animation.add("shoot", [8], 6, false);
+		animation.add("charge", [9, 10, 11, 12], 4, false);
+		animation.add("chargeAttack", [13], 6, false);
+
 		controller = new PlatformerController();
 		addComponent(controller);
 		solid = true;
@@ -46,10 +56,12 @@ class Player extends Entity
 
 	override function update(elapsed:Float)
 	{
+		attackFrames -= elapsed;
 		_invincible -= elapsed;
+		super.update(elapsed);
 		handleInvincibleEffect();
 		handleShoot(elapsed);
-		super.update(elapsed);
+		trace(animation.name);
 	}
 
 	public function onHitEnemy(enemy:Enemy)
@@ -112,6 +124,8 @@ class Player extends Entity
 
 	function handleShoot(elapsed:Float)
 	{
+		if (FlxG.keys.anyJustPressed([X, K]))
+			animation.play("charge");
 		if (FlxG.keys.anyPressed([X, K]))
 			charge += elapsed;
 		controller.movement.speedScale = if (charge > chargeInitiateThreshold) chargeSpeedScale else 1;
@@ -127,6 +141,8 @@ class Player extends Entity
 		if (bullet == null)
 			return;
 
+		attackFrames = 0.2;
+		animation.play(isChargedAttack ? "chargeAttack" : "shoot");
 		bullet.fire(x + width / 2, y + height / 2, if (facing == FlxObject.LEFT) -1 else 1);
 
 		// TODO: Change to lazer

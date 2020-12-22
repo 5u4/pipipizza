@@ -31,5 +31,8 @@ class PlatformerMovement extends Component
 			e.facing = FlxObject.LEFT;
 
 		e.velocity.x = FlxMath.lerp(e.velocity.x, hspeed * move * _speedScale, xweight);
+		var p = cast(e, Player);
+		if (e.isTouching(FlxObject.FLOOR) && p.charge <= 0 && p.attackFrames <= 0)
+			e.animation.play(Math.abs(move) > 0 ? "run" : "idle");
 	}
 }

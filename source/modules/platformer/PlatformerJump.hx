@@ -21,7 +21,8 @@ class PlatformerJump extends Component
 	{
 		super.update(elapsed);
 
-		var onFloor = entity().isTouching(FlxObject.FLOOR);
+		var e = entity();
+		var onFloor = e.isTouching(FlxObject.FLOOR);
 		isJumping = false;
 		var intentJump = jumpIntention();
 		var intentJumpHigher = jumpHoldIntention();
@@ -40,6 +41,9 @@ class PlatformerJump extends Component
 				isJumping = true;
 			_jumpEnergy -= elapsed;
 			_coyote -= elapsed;
+			var p = cast(e, Player);
+			if (p.charge <= 0 && p.attackFrames <= 0)
+				e.animation.play("jump");
 		}
 		else
 		{
@@ -52,7 +56,7 @@ class PlatformerJump extends Component
 		_jumpBuffer -= elapsed;
 
 		if (isJumping)
-			entity().velocity.y = -jumpSpeed * jumpScale;
+			e.velocity.y = -jumpSpeed * jumpScale;
 	}
 
 	function initiateJump()
