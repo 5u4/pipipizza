@@ -17,7 +17,7 @@ class BattleState extends FlxTransitionableState
 	var emitters:FlxTypedGroup<FlxEmitter>;
 	var largeEmitters:FlxTypedGroup<FlxEmitter>;
 	var onHitEmitter:FlxEmitter;
-	var hpHuds:Array<FlxSprite>;
+	var hpHuds:Array<HpBlock>;
 	var enemyHp:HpHud;
 
 	var map:FlxOgmo3Loader;
@@ -100,14 +100,12 @@ class BattleState extends FlxTransitionableState
 			largeEmitters.add(emitter);
 		}
 
-		hpHuds = new Array<FlxSprite>();
+		hpHuds = new Array<HpBlock>();
 		var hpHudX = 24.0;
 		for (_ in 0...player.hp)
 		{
-			var heart = new FlxSprite();
-			heart.makeGraphic(48, 48, FlxColor.LIME);
+			var heart = new HpBlock();
 			heart.setPosition(hpHudX, 12);
-			heart.scrollFactor.set(0, 0);
 			hpHudX += heart.width + 12;
 			hpHuds.push(heart);
 		}
@@ -197,7 +195,10 @@ class BattleState extends FlxTransitionableState
 	function drawHp()
 	{
 		for (i => h in hpHuds)
-			h.color = i < player.hp ? FlxColor.LIME : FlxColor.GRAY;
+		{
+			if (i >= player.hp)
+				h.down();
+		}
 	}
 
 	function spawnParticleAt(b:Bullet)
