@@ -179,7 +179,7 @@ class CheeseState extends BattleState
 		spawnBrick();
 	}
 
-	function spawnBrick(y = 0.0)
+	function spawnBrick(y = -67.0)
 	{
 		if (spawnCenter)
 		{
