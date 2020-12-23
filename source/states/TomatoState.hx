@@ -14,6 +14,12 @@ class TomatoState extends BattleState
 		super.update(elapsed);
 	}
 
+	override function handleWin()
+	{
+		progression.finishLevel(2);
+		super.handleWin();
+	}
+
 	override function getEnemy()
 	{
 		var enemy = new Tomato(player);

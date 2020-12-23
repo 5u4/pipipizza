@@ -14,6 +14,12 @@ class HogState extends BattleState
 		super.update(elapsed);
 	}
 
+	override function handleWin()
+	{
+		progression.finishLevel(1);
+		super.handleWin();
+	}
+
 	override function getEnemy()
 	{
 		var enemy = new Hog();

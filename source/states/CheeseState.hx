@@ -95,6 +95,12 @@ class CheeseState extends BattleState
 		FlxG.overlap(player, damageZone, (p, d) -> reSpawnPlayer());
 	}
 
+	override function handleWin()
+	{
+		progression.finishLevel(3);
+		super.handleWin();
+	}
+
 	override function getEnemy():Enemy
 	{
 		return new Cheese(player, () -> enemyBullets.getFirstAvailable());

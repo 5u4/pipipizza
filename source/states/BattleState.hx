@@ -8,6 +8,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 
 class BattleState extends FlxTransitionableState
 {
@@ -20,6 +21,8 @@ class BattleState extends FlxTransitionableState
 	var hpHuds:Array<HpBlock>;
 	var enemyHp:HpHud;
 
+	var progression:Progression;
+	var switchSceneTimer:FlxTimer;
 	var map:FlxOgmo3Loader;
 	var foregrounds:FlxTypedGroup<FlxSprite>;
 	var collisions:FlxTypedGroup<FlxSprite>;
@@ -31,6 +34,11 @@ class BattleState extends FlxTransitionableState
 
 	override public function create()
 	{
+		FlxG.mouse.visible = false;
+
+		progression = new Progression();
+		switchSceneTimer = new FlxTimer();
+
 		map = new FlxOgmo3Loader(AssetPaths.PlatformerShooter__ogmo, getRoom());
 		foregrounds = new FlxTypedGroup<FlxSprite>();
 		collisions = new FlxTypedGroup<FlxSprite>();
@@ -130,6 +138,9 @@ class BattleState extends FlxTransitionableState
 		if (_pause > 0)
 			return;
 
+		if (switchSceneTimer.finished)
+			FlxG.switchState(new MenuState());
+
 		prevPx = player.x;
 		super.update(elapsed);
 
@@ -189,7 +200,7 @@ class BattleState extends FlxTransitionableState
 		player.controller.jump.jumpIntention = () -> false;
 		player.controller.jump.jumpHoldIntention = () -> false;
 
-		FlxG.switchState(new MenuState());
+		switchSceneTimer.start();
 	}
 
 	function drawHp()
@@ -228,6 +239,21 @@ class BattleState extends FlxTransitionableState
 		collisions.add(right);
 	}
 
+	function checkWin()
+	{
+		for (e in enemies)
+		{
+			if (e.health > 0)
+				return;
+		}
+		handleWin();
+	}
+
+	function handleWin()
+	{
+		switchSceneTimer.start();
+	}
+
 	function onLoadEntity(entity:EntityData)
 	{
 		switch (entity.name)
@@ -237,7 +263,11 @@ class BattleState extends FlxTransitionableState
 			case "enemy":
 				var enemy = getEnemy();
 				enemy.setPosition(entity.x, entity.y);
-				enemy.onHit = () -> enemyHp.damaged();
+				enemy.onHit = () ->
+				{
+					enemyHp.damaged();
+					checkWin();
+				}
 				enemies.add(enemy);
 			case "barn_bg":
 				var e = new FlxSprite(entity.x, entity.y);
