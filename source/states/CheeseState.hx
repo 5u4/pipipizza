@@ -95,6 +95,16 @@ class CheeseState extends BattleState
 		FlxG.overlap(player, damageZone, (p, d) -> reSpawnPlayer());
 	}
 
+	override function onLevelFinish()
+	{
+		for (e in enemies)
+		{
+			if (e.health > 0)
+				super.onLevelFinish();
+		}
+		FlxG.switchState(new EndingState());
+	}
+
 	override function handleWin()
 	{
 		progression.finishLevel(3);

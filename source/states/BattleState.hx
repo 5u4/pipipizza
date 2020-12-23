@@ -139,7 +139,7 @@ class BattleState extends FlxTransitionableState
 			return;
 
 		if (switchSceneTimer.finished)
-			FlxG.switchState(new MenuState());
+			onLevelFinish();
 
 		prevPx = player.x;
 		super.update(elapsed);
@@ -177,6 +177,11 @@ class BattleState extends FlxTransitionableState
 		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
+	}
+
+	function onLevelFinish()
+	{
+		FlxG.switchState(new MenuState());
 	}
 
 	function updateBgX(bg:FlxSprite, weight = -0.1)
