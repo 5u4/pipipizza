@@ -68,6 +68,7 @@ class CheeseState extends BattleState
 		add(enemies);
 		add(player);
 		add(emitters);
+		add(largeEmitters);
 		add(onHitEmitter);
 		add(foregrounds);
 		add(enemyHp);
@@ -88,7 +89,7 @@ class CheeseState extends BattleState
 		FlxG.collide(enemyBullets, collisions, (b:Bullet, w) -> b.kill());
 		FlxG.collide(bullets, bricks, (b:Bullet, w) ->
 		{
-			spawnParticleAt(b.x, b.y);
+			spawnParticleAt(b);
 			b.kill();
 		});
 		FlxG.overlap(player, damageZone, (p, d) -> reSpawnPlayer());

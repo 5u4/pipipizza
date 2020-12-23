@@ -142,7 +142,7 @@ class Player extends Entity
 
 		attackFrames = 0.2;
 		animation.play(isChargedAttack ? "chargeAttack" : "shoot");
-		bullet.fire(x + width / 2, y + height / 2, if (facing == FlxObject.LEFT) -1 else 1);
+		bullet.fire(x + width / 2, y + height / 2, facing == FlxObject.LEFT ? -1 : 1, isChargedAttack ? 1300 : 750);
 
 		// TODO: Change to lazer
 		var size = isChargedAttack ? 4.0 : 1.0;

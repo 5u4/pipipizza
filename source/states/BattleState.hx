@@ -15,6 +15,7 @@ class BattleState extends FlxTransitionableState
 	var enemies:FlxTypedGroup<Enemy>;
 	var bullets:FlxTypedGroup<Bullet>;
 	var emitters:FlxTypedGroup<FlxEmitter>;
+	var largeEmitters:FlxTypedGroup<FlxEmitter>;
 	var onHitEmitter:FlxEmitter;
 	var hpHuds:Array<FlxSprite>;
 	var enemyHp:HpHud;
@@ -82,6 +83,23 @@ class BattleState extends FlxTransitionableState
 			emitters.add(emitter);
 		}
 
+		largeEmitters = new FlxTypedGroup<FlxEmitter>();
+		for (_ in 0...10)
+		{
+			var emitter = new FlxEmitter(0, 0, 30);
+			emitter.makeParticles(4, 4, FlxColor.WHITE, 30);
+			emitter.launchMode = FlxEmitterMode.SQUARE;
+			emitter.angle.start.min = -90;
+			emitter.angle.start.max = 90;
+			emitter.acceleration.start.min.y = -100;
+			emitter.acceleration.end.min.y = 500;
+			emitter.acceleration.end.max.y = 800;
+			emitter.velocity.set(-450, -550, 450, 450, 0, 0, 0, 0);
+			emitter.lifespan.set(0.6, 0.9);
+			emitter.scale.set(8, 8, 16, 16, 0, 0);
+			largeEmitters.add(emitter);
+		}
+
 		hpHuds = new Array<FlxSprite>();
 		var hpHudX = 24.0;
 		for (_ in 0...player.hp)
@@ -122,12 +140,12 @@ class BattleState extends FlxTransitionableState
 		FlxG.overlap(player, enemies, (p:Player, e:Enemy) -> p.onHitEnemy(e));
 		FlxG.collide(bullets, collisions, (b:Bullet, w:FlxSprite) ->
 		{
-			spawnParticleAt(b.x, b.y);
+			spawnParticleAt(b);
 			b.kill();
 		});
 		FlxG.overlap(bullets, enemies, (b:Bullet, e:Enemy) ->
 		{
-			spawnParticleAt(b.x, b.y);
+			spawnParticleAt(b);
 			e.onHitBullet(b);
 		});
 		FlxG.collide(emitters, collisions);
@@ -144,6 +162,7 @@ class BattleState extends FlxTransitionableState
 		add(enemies);
 		add(player);
 		add(emitters);
+		add(largeEmitters);
 		add(onHitEmitter);
 		add(foregrounds);
 		add(enemyHp);
@@ -181,23 +200,25 @@ class BattleState extends FlxTransitionableState
 			h.color = i < player.hp ? FlxColor.LIME : FlxColor.GRAY;
 	}
 
-	function spawnParticleAt(x:Float, y:Float)
+	function spawnParticleAt(b:Bullet)
 	{
-		var emitter = emitters.recycle();
-		emitter.setPosition(x, y);
-		emitter.start(true, 0.1, 15);
+		var emitter = b.scale.x == 1 ? emitters.recycle() : largeEmitters.recycle();
+		emitter.setPosition(b.x, b.y);
+		emitter.start(true, 0.1);
+		if (b.scale.x != 1)
+			FlxG.camera.shake(0.01, 0.1);
 	}
 
 	function addBounds()
 	{
 		var extraHeight = 300;
 		var w = 8;
-		var left = new FlxSprite(-w, -extraHeight);
+		var left = new FlxSprite(1 - w, -extraHeight);
 		left.makeGraphic(w, FlxG.height + extraHeight, FlxColor.TRANSPARENT);
 		left.solid = true;
 		left.immovable = true;
 
-		var right = new FlxSprite(FlxG.width + 1, -extraHeight);
+		var right = new FlxSprite(FlxG.width, -extraHeight);
 		right.makeGraphic(w, FlxG.height + extraHeight, FlxColor.TRANSPARENT);
 		right.solid = true;
 		right.immovable = true;
