@@ -1,11 +1,11 @@
 package enemies;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import modules.Entity;
 import modules.brains.statemachine.State;
@@ -21,6 +21,9 @@ class Cheese extends Enemy
 	var attackPattern = Math.random();
 	var aimCooldown = 0.1;
 	var _aimCooldown = 0.0;
+	var fireCooldown = 0.4;
+	var _fireCooldown = 0.0;
+	var charged = false;
 
 	public function new(target:Entity, getBullet:() -> FlxSprite)
 	{
@@ -31,14 +34,25 @@ class Cheese extends Enemy
 		grav.grav = 0.0;
 
 		brain.states.push(MakeChangeLocationState());
+		brain.states.push(MakeChargeState());
 		brain.states.push(MakeFireState());
 		brain.states.push(MakeAimState());
-		brain.states.push(MakeIdleState());
 	}
 
 	override function render()
 	{
-		makeGraphic(192, 192, FlxColor.RED);
+		loadGraphic(AssetPaths.cheese__png, true, 192, 192);
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
+
+		animation.add("idle", [0, 1, 2], 6, true);
+		animation.add("charge", [3, 4, 5], 3, false);
+		animation.add("attack", [6, 7], 6, true);
+		animation.finishCallback = (name:String) ->
+		{
+			if (name == "charge")
+				charged = true;
+		}
 	}
 
 	override function update(elapsed:Float)
@@ -90,6 +104,7 @@ class Cheese extends Enemy
 		state.shouldEnable = () -> timer.finished;
 		state.enable = () ->
 		{
+			animation.play("idle");
 			flyTo.x = x > FlxG.width / 2 ? margin : FlxG.width - margin - width;
 			flyTo.y = Math.random() * 480.0 + 64.0;
 		};
@@ -97,6 +112,7 @@ class Cheese extends Enemy
 		{
 			x = FlxMath.lerp(x, flyTo.x, elapsed * 0.7);
 			y = FlxMath.lerp(y, flyTo.y, elapsed * 0.7);
+			facing = x < FlxG.width / 2 ? FlxObject.RIGHT : FlxObject.LEFT;
 		};
 		state.shouldDisable = () -> new FlxVector(x, y).distanceTo(flyTo) < 30;
 		state.disable = () ->
@@ -107,17 +123,41 @@ class Cheese extends Enemy
 		return state;
 	}
 
+	function MakeChargeState()
+	{
+		var state = new State();
+		var timer = new FlxTimer();
+		timer.start(0);
+		state.shouldEnable = () -> timer.finished && !charged;
+		state.enable = () ->
+		{
+			animation.play("charge");
+			timer.start(1);
+		}
+		return state;
+	}
+
 	function MakeFireState()
 	{
 		var state = new State();
 		var timer = new FlxTimer();
 		timer.start(0);
-		state.shouldEnable = () -> timer.finished && attackPattern >= 0.5;
+		state.shouldEnable = () -> charged && attackPattern >= 0.5;
 		state.enable = () ->
 		{
+			animation.play("attack");
+			timer.start(3);
+		}
+		state.handle = elapsed ->
+		{
+			_fireCooldown -= elapsed;
+			if (_fireCooldown > 0)
+				return;
 			fireCircular(10);
-			timer.start(0.15);
-		};
+			_fireCooldown = fireCooldown;
+		}
+		state.shouldDisable = () -> timer.finished;
+		state.disable = () -> charged = false;
 
 		return state;
 	}
@@ -127,11 +167,12 @@ class Cheese extends Enemy
 		var state = new State();
 		var timer = new FlxTimer();
 		timer.start(0);
-		state.shouldEnable = () -> timer.finished && attackPattern < 0.5;
+		state.shouldEnable = () -> charged && attackPattern < 0.5;
 		state.enable = () ->
 		{
+			animation.play("attack");
 			timer.start(3);
-		};
+		}
 		state.handle = elapsed ->
 		{
 			_aimCooldown -= elapsed;
@@ -141,18 +182,8 @@ class Cheese extends Enemy
 			_aimCooldown = aimCooldown;
 		}
 		state.shouldDisable = () -> timer.finished;
-		state.disable = () -> timer.start(2);
+		state.disable = () -> charged = false;
 
-		return state;
-	}
-
-	function MakeIdleState()
-	{
-		var state = new State();
-		var timer = new FlxTimer();
-		state.shouldEnable = () -> true;
-		state.enable = () -> timer.start();
-		state.shouldDisable = () -> timer.finished;
 		return state;
 	}
 }
