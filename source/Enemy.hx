@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxSound;
 import modules.Entity;
 import modules.platformer.Gravity;
 import openfl8.FlashEffect;
@@ -11,6 +12,7 @@ class Enemy extends Entity
 	var grav = new Gravity();
 	var hp = 100.0;
 	var flashEffect:FlashEffect;
+	var hitSound:FlxSound;
 
 	public var onHit:Void->Void;
 
@@ -22,6 +24,7 @@ class Enemy extends Entity
 		addComponent(grav);
 		flashEffect = new FlashEffect();
 		shader = flashEffect.shader;
+		hitSound = FlxG.sound.load(AssetPaths.hit__mp3);
 	}
 
 	public function render() {}
@@ -36,7 +39,7 @@ class Enemy extends Entity
 	{
 		health = Math.max(0, health - amount / hp);
 		flashEffect.apply();
-		FlxG.sound.play(AssetPaths.hit__wav);
+		hitSound.play(true);
 		onHit();
 		deathCheck();
 	}

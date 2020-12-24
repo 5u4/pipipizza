@@ -8,6 +8,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -34,6 +35,8 @@ class BattleState extends FlxTransitionableState
 	var movableFgs:FlxTypedGroup<FlxSprite>;
 	var item:FlxSprite;
 	var itemTouched = false;
+	var pickUpSound:FlxSound;
+	var showItemSound:FlxSound;
 	var prevPx:Float;
 	var _pause = 0.0;
 
@@ -128,6 +131,8 @@ class BattleState extends FlxTransitionableState
 		item = new FlxSprite();
 		item.loadGraphic(itemGraphic());
 		item.visible = false;
+		pickUpSound = FlxG.sound.load(AssetPaths.pickup__mp3);
+		showItemSound = FlxG.sound.load(AssetPaths.show_item__mp3);
 
 		map.loadEntities(onLoadEntity, "backgrounds");
 		map.loadEntities(onLoadEntity, "collisions");
@@ -172,7 +177,7 @@ class BattleState extends FlxTransitionableState
 			if (itemTouched)
 				return;
 			itemTouched = true;
-			FlxG.sound.play(AssetPaths.pickup__wav);
+			pickUpSound.play(true);
 			switchSceneTimer.start(0.1);
 		});
 
@@ -289,9 +294,9 @@ class BattleState extends FlxTransitionableState
 		item.scale.y = 0;
 		item.visible = true;
 		var floatY = item.y - 30;
-		FlxTween.tween(item.scale, {x: 1, y: 1}, 0.5, {ease: FlxEase.backOut});
+		FlxTween.tween(item.scale, {x: 1, y: 1}, 0.75, {ease: FlxEase.backOut});
 		FlxTween.tween(item, {y: floatY}, 2, {type: PINGPONG, ease: FlxEase.sineInOut});
-		FlxG.sound.play(AssetPaths.show_item__wav);
+		showItemSound.play(true);
 	}
 
 	function onLoadEntity(entity:EntityData)

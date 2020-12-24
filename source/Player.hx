@@ -20,6 +20,9 @@ class Player extends Entity
 
 	var chargeSound:FlxSound;
 	var chargedSound:FlxSound;
+	var hitSound:FlxSound;
+	var shootSound:FlxSound;
+	var chargedShootSound:FlxSound;
 	var bullets:FlxTypedGroup<Bullet>;
 	var invincible = 1.0;
 	var _invincible = 0.0;
@@ -55,6 +58,12 @@ class Player extends Entity
 		shader = invincibleEffect.shader;
 		this.onHitEmitter = onHitEmitter;
 		this.framePauser = framePauser;
+
+		chargeSound = FlxG.sound.load(AssetPaths.charging__mp3);
+		chargedSound = FlxG.sound.load(AssetPaths.charged__mp3);
+		hitSound = FlxG.sound.load(AssetPaths.player_hit__mp3);
+		shootSound = FlxG.sound.load(AssetPaths.shoot__mp3);
+		chargedShootSound = FlxG.sound.load(AssetPaths.charged_shoot__mp3);
 	}
 
 	override function update(elapsed:Float)
@@ -101,7 +110,7 @@ class Player extends Entity
 		onHitEmitter.start(true, 0.1, 30);
 		FlxG.state.camera.flash(0x88888888, 0.1);
 		FlxG.state.camera.shake(0.01, 0.1);
-		FlxG.sound.play(AssetPaths.player_hit__wav);
+		hitSound.play(true);
 		framePauser(0.15);
 		_invincible = invincible;
 		hp -= 1;
@@ -130,28 +139,23 @@ class Player extends Entity
 		if (FlxG.keys.anyJustPressed([X, K]))
 		{
 			animation.play("charge");
-			chargeSound = FlxG.sound.play(AssetPaths.charging__wav);
+			if (!chargeSound.playing)
+				chargeSound.play(true);
 		}
 		if (FlxG.keys.anyPressed([X, K]))
 		{
 			charge += elapsed;
-			if (charge > chargeAttackThreshold && chargedSound == null)
-				chargedSound = FlxG.sound.play(AssetPaths.charged__wav);
+			if (charge > chargeAttackThreshold)
+				chargedSound.play();
 		}
-		controller.movement.speedScale = if (charge > chargeInitiateThreshold) chargeSpeedScale else 1;
-		controller.jump.jumpScale = if (charge > chargeInitiateThreshold) chargeJumpScale else 1;
+		controller.movement.speedScale = charge > chargeInitiateThreshold ? chargeSpeedScale : 1;
+		controller.jump.jumpScale = charge > chargeInitiateThreshold ? chargeJumpScale : 1;
 
 		if (!FlxG.keys.anyJustReleased([X, K]))
 			return;
 
-		if (chargeSound != null)
-		{
-			chargeSound.fadeOut(0.1);
-			chargeSound = null;
-		}
-
-		if (chargedSound != null)
-			chargedSound = null;
+		if (chargeSound.playing)
+			chargeSound.stop();
 
 		var isChargedAttack = charge > chargeAttackThreshold;
 		charge = 0;
@@ -163,9 +167,11 @@ class Player extends Entity
 		attackFrames = 0.2;
 		animation.play(isChargedAttack ? "chargeAttack" : "shoot");
 		bullet.fire(x + width / 2, y + height / 2, facing == FlxObject.LEFT ? -1 : 1, isChargedAttack ? 1300 : 750);
-		FlxG.sound.play(isChargedAttack ? AssetPaths.charged_shoot__mp3 : AssetPaths.shoot__wav);
+		if (isChargedAttack)
+			chargedShootSound.play(true);
+		else
+			shootSound.play(true);
 
-		// TODO: Change to lazer
 		bullet.setEnlarge(isChargedAttack);
 	}
 }

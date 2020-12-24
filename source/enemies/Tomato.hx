@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import modules.Entity;
 import modules.brains.statemachine.State;
@@ -15,6 +16,7 @@ class Tomato extends Enemy
 	var brain = new StateMachine();
 	var lastXVelocity = 0.0;
 	var jumpForce = 900.0;
+	var jumpSound:FlxSound;
 
 	public function new(target:Entity)
 	{
@@ -24,6 +26,8 @@ class Tomato extends Enemy
 
 		brain.states.push(MakeJumpAttackState());
 		brain.states.push(MakeIdleState());
+
+		jumpSound = FlxG.sound.load(AssetPaths.tomato_jump__mp3);
 	}
 
 	override function render()
@@ -76,7 +80,7 @@ class Tomato extends Enemy
 				facing = FlxObject.LEFT;
 			else if (norm.x > 0)
 				facing = FlxObject.RIGHT;
-			FlxG.sound.play(AssetPaths.tomato_jump__wav);
+			jumpSound.play(true);
 		};
 		state.handle = _ -> animation.play(velocity.y < 0 ? "jump" : "fall");
 		state.shouldDisable = () -> isTouching(FlxObject.FLOOR);

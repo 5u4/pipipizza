@@ -2,10 +2,13 @@ package modules.platformer;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.system.FlxSound;
 
 // TODO: Integrate impulse
 class PlatformerJump extends Component
 {
+	var sound:FlxSound;
+
 	public var jumpScale = 1.0;
 	public var jumpSpeed = 940.0;
 	public var jumpEnergy = 0.2;
@@ -17,6 +20,12 @@ class PlatformerJump extends Component
 	public var jumpIntention = () -> false;
 	public var jumpHoldIntention = () -> false;
 	public var isJumping = false;
+
+	public function new()
+	{
+		super();
+		sound = FlxG.sound.load(AssetPaths.jump__mp3);
+	}
 
 	override function update(elapsed:Float)
 	{
@@ -65,6 +74,6 @@ class PlatformerJump extends Component
 		_coyote = 0.0;
 		_jumpEnergy = jumpEnergy * jumpScale;
 		isJumping = true;
-		FlxG.sound.play(AssetPaths.jump__wav);
+		sound.play(true);
 	}
 }

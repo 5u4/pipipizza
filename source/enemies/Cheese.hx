@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import modules.Entity;
 import modules.brains.statemachine.State;
@@ -24,6 +25,7 @@ class Cheese extends Enemy
 	var fireCooldown = 0.8;
 	var _fireCooldown = 0.0;
 	var charged = false;
+	var shootSound:FlxSound;
 
 	public function new(target:Entity, getBullet:() -> FlxSprite)
 	{
@@ -37,6 +39,8 @@ class Cheese extends Enemy
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeFireState());
 		brain.states.push(MakeAimState());
+
+		shootSound = FlxG.sound.load(AssetPaths.cheese_shoot__mp3);
 	}
 
 	override function render()
@@ -80,7 +84,7 @@ class Cheese extends Enemy
 			bullet.angle = v.angleBetween(new FlxVector()) + 90;
 			v.rotateByDegrees(deg);
 		}
-		FlxG.sound.play(AssetPaths.cheese_shoot__wav);
+		shootSound.play(true);
 	}
 
 	function fireDirectly()
@@ -99,7 +103,7 @@ class Cheese extends Enemy
 		bullet.velocity.y = speed * v.y;
 		bullet.animation.play("fire", true);
 		bullet.angle = v.angleBetween(new FlxVector()) + 90;
-		FlxG.sound.play(AssetPaths.cheese_shoot__wav);
+		shootSound.play(true);
 	}
 
 	function MakeChangeLocationState()

@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFilterFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.mouse.FlxMouseEventManager;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -15,6 +16,7 @@ class Btn extends FlxTypedGroup<FlxSprite>
 {
 	var tween:FlxTween;
 	var glowTween:FlxTween;
+	var sound:FlxSound;
 
 	public var text:FlxText;
 	public var outline:FlxText;
@@ -61,6 +63,8 @@ class Btn extends FlxTypedGroup<FlxSprite>
 
 		if (onClick != null)
 			onMouseUp = onClick;
+
+		sound = FlxG.sound.load(AssetPaths.pickup__mp3);
 	}
 
 	public function updateParam(Update:(obj:FlxSprite) -> Void)
@@ -95,7 +99,7 @@ class Btn extends FlxTypedGroup<FlxSprite>
 			glowTween = null;
 		}
 		glowTween = FlxTween.tween(glow2, {alpha: 1.0}, 0.3);
-		FlxG.sound.play(AssetPaths.pickup__wav);
+		sound.play(true);
 		onMouseOver();
 	}
 

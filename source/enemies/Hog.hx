@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import modules.brains.statemachine.State;
 import modules.brains.statemachine.StateMachine;
@@ -16,6 +17,7 @@ class Hog extends Enemy
 	var brain = new StateMachine();
 	var impulse = new FlxVector(300.0, 900.0);
 	var isStun = false;
+	var hitWallSound:FlxSound;
 
 	public function new()
 	{
@@ -26,6 +28,8 @@ class Hog extends Enemy
 		brain.states.push(MakeStunState());
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeIdleState());
+
+		hitWallSound = FlxG.sound.load(AssetPaths.hog_hit_wall__mp3);
 	}
 
 	override function render()
@@ -132,6 +136,6 @@ class Hog extends Enemy
 
 		velocity.x = -impulse.x * dir;
 		velocity.y = -impulse.y;
-		FlxG.sound.play(AssetPaths.hog_hit_wall__wav);
+		hitWallSound.play(true);
 	}
 }
