@@ -14,6 +14,7 @@ class MenuState extends FlxTransitionableState
 	var initialized = false;
 	var bg:FlxSprite;
 	var titleText:FlxText;
+	var titleText2:FlxText;
 	var lv1Button:FlxButton;
 	var lv2Button:FlxButton;
 	var lv3Button:FlxButton;
@@ -39,10 +40,21 @@ class MenuState extends FlxTransitionableState
 		bg.loadGraphic(progression.canAccessLevel(4) ? AssetPaths.menu2__jpg : AssetPaths.menu1__jpg);
 		add(bg);
 
-		// titleText = new FlxText(0, 0, 0, "GAME", 22);
-		// titleText.alignment = CENTER;
-		// titleText.screenCenter(X);
-		// add(titleText);
+		titleText = new FlxText(0, 0, 0, "Ho Ho Holiday,");
+		titleText.setFormat(AssetPaths.fresh_lychee__ttf, 128, FlxColor.WHITE, CENTER);
+		titleText.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 4);
+		titleText.screenCenter(X);
+		titleText.x -= 256;
+		titleText.y = 48;
+		add(titleText);
+
+		titleText2 = new FlxText(0, 0, 0, "Pi Pi PIZZA NIGHT 🍕");
+		titleText2.setFormat(AssetPaths.fresh_lychee__ttf, 128, FlxColor.WHITE, CENTER);
+		titleText2.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 4);
+		titleText2.screenCenter(X);
+		titleText2.x += 128;
+		titleText2.y = titleText.y + titleText.height + 12;
+		add(titleText2);
 
 		var xpos = FlxG.width / 3.0 * 2.0;
 		lv1Button = new FlxButton(xpos, 0, "Level 1", () -> FlxG.switchState(new HogState()));
