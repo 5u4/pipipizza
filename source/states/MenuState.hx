@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.text.FlxText;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 
 class MenuState extends FlxTransitionableState
@@ -16,9 +15,9 @@ class MenuState extends FlxTransitionableState
 	var titleText:FlxText;
 	var titleText2:FlxText;
 	var ingredient:FlxText;
-	var lv1Button:FlxButton;
-	var lv2Button:FlxButton;
-	var lv3Button:FlxButton;
+	var lv1Button:Btn;
+	var lv2Button:Btn;
+	var lv3Button:Btn;
 
 	function init()
 	{
@@ -57,35 +56,41 @@ class MenuState extends FlxTransitionableState
 		titleText2.y = titleText.y + titleText.height + 12;
 		add(titleText2);
 
-		var xpos = FlxG.width / 3.0 * 2.0;
+		var xpos = FlxG.width / 3.0 * 2.0 + 24;
 		var margin = 16;
 
 		ingredient = new FlxText(xpos, 0, 0, "Ingredients");
 		ingredient.setFormat(AssetPaths.fresh_lychee__ttf, 88, FlxColor.WHITE, CENTER);
 		ingredient.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 3);
 		ingredient.screenCenter(Y);
-		ingredient.x -= ingredient.width / 2;
+		ingredient.x -= ingredient.frameWidth / 2;
 		ingredient.y -= 88;
 		add(ingredient);
 
-		lv1Button = new FlxButton(xpos, 0, "Sausage", () -> FlxG.switchState(new HogState()));
-		lv1Button.y += ingredient.y + ingredient.height + margin * 2;
-		lv1Button.x -= ingredient.width / 2;
+		lv1Button = new Btn(xpos, 0, "Sausage", () -> FlxG.switchState(new HogState()));
+		lv1Button.updateParam(b ->
+		{
+			b.y += ingredient.y + ingredient.height + margin * 2;
+		});
 		add(lv1Button);
 
 		if (progression.canAccessLevel(2))
 		{
-			lv2Button = new FlxButton(xpos, 0, "Tomato Sauce", () -> FlxG.switchState(new TomatoState()));
-			lv2Button.y = lv1Button.y + lv1Button.height + margin;
-			lv2Button.x -= ingredient.width / 2;
+			lv2Button = new Btn(xpos, 0, "Tomato Sauce", () -> FlxG.switchState(new TomatoState()));
+			lv2Button.updateParam(b ->
+			{
+				b.y = lv1Button.text.y + lv1Button.text.height + margin;
+			});
 			add(lv2Button);
 		}
 
 		if (progression.canAccessLevel(3))
 		{
-			lv3Button = new FlxButton(xpos, 0, "Cheese", () -> FlxG.switchState(new CheeseState()));
-			lv3Button.y = lv2Button.y + lv2Button.height + margin;
-			lv3Button.x -= ingredient.width / 2;
+			lv3Button = new Btn(xpos, 0, "Cheese", () -> FlxG.switchState(new CheeseState()));
+			lv3Button.updateParam(b ->
+			{
+				b.y = lv2Button.text.y + lv2Button.text.height + margin;
+			});
 			add(lv3Button);
 		}
 
