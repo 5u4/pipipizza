@@ -3,6 +3,7 @@ package states;
 import enemies.Hog;
 import flixel.FlxObject;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 
 class HogState extends BattleState
 {
@@ -18,6 +19,11 @@ class HogState extends BattleState
 	override function itemGraphic():FlxGraphicAsset
 	{
 		return AssetPaths.sausage__png;
+	}
+
+	override function getHealthColor():FlxColor
+	{
+		return 0xFFFFCBC0;
 	}
 
 	override function handleWin()

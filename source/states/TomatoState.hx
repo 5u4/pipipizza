@@ -3,6 +3,7 @@ package states;
 import enemies.Tomato;
 import flixel.FlxObject;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 
 class TomatoState extends BattleState
 {
@@ -18,6 +19,11 @@ class TomatoState extends BattleState
 	override function itemGraphic():FlxGraphicAsset
 	{
 		return AssetPaths.tomato_sause__png;
+	}
+
+	override function getHealthColor():FlxColor
+	{
+		return 0xFFFF8F88;
 	}
 
 	override function handleWin()

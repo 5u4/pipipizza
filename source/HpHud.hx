@@ -16,12 +16,12 @@ class HpHud extends FlxTypedGroup<FlxSprite>
 	var hpChangeCooldown = 0.5;
 	var _hpChangeCooldown = 0.0;
 
-	public function new(enemies:FlxTypedGroup<Enemy>)
+	public function new(enemies:FlxTypedGroup<Enemy>, color:FlxColor)
 	{
 		super();
 		bg = makeBar(FlxColor.BLACK);
 		drop = makeBar(FlxColor.RED);
-		hp = makeBar(FlxColor.GREEN);
+		hp = makeBar(color);
 		this.enemies = enemies;
 		add(bg);
 		add(drop);

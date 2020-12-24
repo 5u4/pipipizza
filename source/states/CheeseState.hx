@@ -114,6 +114,11 @@ class CheeseState extends BattleState
 		FlxG.switchState(new EndingState());
 	}
 
+	override function getHealthColor():FlxColor
+	{
+		return 0xFFFFDD9C;
+	}
+
 	override function itemGraphic():FlxGraphicAsset
 	{
 		return AssetPaths.cheese_ingredient__png;

@@ -122,7 +122,7 @@ class BattleState extends FlxTransitionableState
 			hpHuds.push(heart);
 		}
 
-		enemyHp = new HpHud(enemies);
+		enemyHp = new HpHud(enemies, getHealthColor());
 
 		item = new FlxSprite();
 		item.loadGraphic(itemGraphic());
@@ -258,6 +258,11 @@ class BattleState extends FlxTransitionableState
 
 		collisions.add(left);
 		collisions.add(right);
+	}
+
+	function getHealthColor():FlxColor
+	{
+		return FlxColor.GREEN;
 	}
 
 	function checkWin()
