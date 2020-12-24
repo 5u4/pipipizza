@@ -2,9 +2,9 @@ package states;
 
 import enemies.Cheese;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import modules.Entity;
 
@@ -74,6 +74,7 @@ class CheeseState extends BattleState
 		add(enemyBullets);
 		add(bullets);
 		add(enemies);
+		add(item);
 		add(player);
 		add(emitters);
 		add(largeEmitters);
@@ -111,6 +112,11 @@ class CheeseState extends BattleState
 				super.onLevelFinish();
 		}
 		FlxG.switchState(new EndingState());
+	}
+
+	override function itemGraphic():FlxGraphicAsset
+	{
+		return AssetPaths.cheese_ingredient__png;
 	}
 
 	override function handleWin()

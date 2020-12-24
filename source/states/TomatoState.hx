@@ -2,6 +2,7 @@ package states;
 
 import enemies.Tomato;
 import flixel.FlxObject;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class TomatoState extends BattleState
 {
@@ -12,6 +13,11 @@ class TomatoState extends BattleState
 		for (fg in movableFgs)
 			updateBgX(fg, 0.05);
 		super.update(elapsed);
+	}
+
+	override function itemGraphic():FlxGraphicAsset
+	{
+		return AssetPaths.tomato_sause__png;
 	}
 
 	override function handleWin()

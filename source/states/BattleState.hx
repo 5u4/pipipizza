@@ -7,6 +7,9 @@ import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
@@ -29,6 +32,7 @@ class BattleState extends FlxTransitionableState
 	var backgrounds:FlxTypedGroup<FlxSprite>;
 	var movableBgs:FlxTypedGroup<FlxSprite>;
 	var movableFgs:FlxTypedGroup<FlxSprite>;
+	var item:FlxSprite;
 	var prevPx:Float;
 	var _pause = 0.0;
 
@@ -120,6 +124,10 @@ class BattleState extends FlxTransitionableState
 
 		enemyHp = new HpHud(enemies);
 
+		item = new FlxSprite();
+		item.loadGraphic(itemGraphic());
+		item.visible = false;
+
 		map.loadEntities(onLoadEntity, "backgrounds");
 		map.loadEntities(onLoadEntity, "collisions");
 		map.loadEntities(onLoadEntity, "entities");
@@ -159,6 +167,8 @@ class BattleState extends FlxTransitionableState
 		});
 		FlxG.collide(emitters, collisions);
 
+		FlxG.overlap(item, player, (_, _) -> switchSceneTimer.start(0));
+
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
 			FlxG.switchState(new MenuState());
 	}
@@ -169,6 +179,7 @@ class BattleState extends FlxTransitionableState
 		add(collisions);
 		add(bullets);
 		add(enemies);
+		add(item);
 		add(player);
 		add(emitters);
 		add(largeEmitters);
@@ -177,6 +188,11 @@ class BattleState extends FlxTransitionableState
 		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
+	}
+
+	function itemGraphic():FlxGraphicAsset
+	{
+		return null;
 	}
 
 	function onLevelFinish()
@@ -205,7 +221,7 @@ class BattleState extends FlxTransitionableState
 		player.controller.jump.jumpIntention = () -> false;
 		player.controller.jump.jumpHoldIntention = () -> false;
 
-		switchSceneTimer.start();
+		switchSceneTimer.start(0.5);
 	}
 
 	function drawHp()
@@ -256,7 +272,13 @@ class BattleState extends FlxTransitionableState
 
 	function handleWin()
 	{
-		switchSceneTimer.start();
+		item.screenCenter();
+		item.scale.x = 0;
+		item.scale.y = 0;
+		item.visible = true;
+		var floatY = item.y - 30;
+		FlxTween.tween(item.scale, {x: 1, y: 1}, 0.5, {ease: FlxEase.backOut});
+		FlxTween.tween(item, {y: floatY}, 2, {type: PINGPONG, ease: FlxEase.sineInOut});
 	}
 
 	function onLoadEntity(entity:EntityData)

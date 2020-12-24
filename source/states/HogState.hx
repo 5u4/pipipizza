@@ -2,6 +2,7 @@ package states;
 
 import enemies.Hog;
 import flixel.FlxObject;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class HogState extends BattleState
 {
@@ -12,6 +13,11 @@ class HogState extends BattleState
 		for (fg in movableFgs)
 			updateBgX(fg, 0.05);
 		super.update(elapsed);
+	}
+
+	override function itemGraphic():FlxGraphicAsset
+	{
+		return AssetPaths.sausage__png;
 	}
 
 	override function handleWin()
