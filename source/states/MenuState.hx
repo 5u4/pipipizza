@@ -15,6 +15,7 @@ class MenuState extends FlxTransitionableState
 	var bg:FlxSprite;
 	var titleText:FlxText;
 	var titleText2:FlxText;
+	var ingredient:FlxText;
 	var lv1Button:FlxButton;
 	var lv2Button:FlxButton;
 	var lv3Button:FlxButton;
@@ -57,23 +58,34 @@ class MenuState extends FlxTransitionableState
 		add(titleText2);
 
 		var xpos = FlxG.width / 3.0 * 2.0;
-		lv1Button = new FlxButton(xpos, 0, "Level 1", () -> FlxG.switchState(new HogState()));
-		lv1Button.screenCenter(Y);
+		var margin = 16;
+
+		ingredient = new FlxText(xpos, 0, 0, "Ingredients");
+		ingredient.setFormat(AssetPaths.fresh_lychee__ttf, 88, FlxColor.WHITE, CENTER);
+		ingredient.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 3);
+		ingredient.screenCenter(Y);
+		ingredient.x -= ingredient.width / 2;
+		ingredient.y -= 88;
+		add(ingredient);
+
+		lv1Button = new FlxButton(xpos, 0, "Sausage", () -> FlxG.switchState(new HogState()));
+		lv1Button.y += ingredient.y + ingredient.height + margin * 2;
+		lv1Button.x -= ingredient.width / 2;
 		add(lv1Button);
 
 		if (progression.canAccessLevel(2))
 		{
-			lv2Button = new FlxButton(xpos, 0, "Level 2", () -> FlxG.switchState(new TomatoState()));
-			lv2Button.screenCenter(Y);
-			lv2Button.y += lv2Button.height + 10;
+			lv2Button = new FlxButton(xpos, 0, "Tomato Sauce", () -> FlxG.switchState(new TomatoState()));
+			lv2Button.y = lv1Button.y + lv1Button.height + margin;
+			lv2Button.x -= ingredient.width / 2;
 			add(lv2Button);
 		}
 
 		if (progression.canAccessLevel(3))
 		{
-			lv3Button = new FlxButton(xpos, 0, "Level 3", () -> FlxG.switchState(new CheeseState()));
-			lv3Button.screenCenter(Y);
-			lv3Button.y = lv2Button.y + lv3Button.height + 10;
+			lv3Button = new FlxButton(xpos, 0, "Cheese", () -> FlxG.switchState(new CheeseState()));
+			lv3Button.y = lv2Button.y + lv2Button.height + margin;
+			lv3Button.x -= ingredient.width / 2;
 			add(lv3Button);
 		}
 
