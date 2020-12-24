@@ -2,6 +2,7 @@ package states;
 
 import enemies.Cheese;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
@@ -35,7 +36,14 @@ class CheeseState extends BattleState
 		for (_ in 0...400)
 		{
 			var bullet = new FlxSprite();
-			bullet.makeGraphic(32, 32, FlxColor.PINK);
+			bullet.loadGraphic(AssetPaths.cheese_bullet__png, true, 80, 53);
+			bullet.animation.add("fire", [0, 1], 2, false);
+			bullet.animation.add("fly", [2, 3, 4], 10, true);
+			bullet.animation.finishCallback = (name:String) ->
+			{
+				if (name == "fire")
+					bullet.animation.play("fly");
+			}
 			bullet.kill();
 			enemyBullets.add(bullet);
 		}

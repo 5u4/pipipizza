@@ -19,9 +19,9 @@ class Cheese extends Enemy
 	var flyTo:FlxPoint = new FlxPoint();
 	var getBullet:() -> FlxSprite;
 	var attackPattern = Math.random();
-	var aimCooldown = 0.1;
+	var aimCooldown = 0.3;
 	var _aimCooldown = 0.0;
-	var fireCooldown = 0.4;
+	var fireCooldown = 0.8;
 	var _fireCooldown = 0.0;
 	var charged = false;
 
@@ -76,6 +76,8 @@ class Cheese extends Enemy
 			bullet.reset(center.x - bullet.width / 2, center.y - bullet.height / 2);
 			bullet.velocity.x = speed * v.x;
 			bullet.velocity.y = speed * v.y;
+			bullet.animation.play("fire", true);
+			bullet.angle = v.angleBetween(new FlxVector()) + 90;
 			v.rotateByDegrees(deg);
 		}
 	}
@@ -94,6 +96,8 @@ class Cheese extends Enemy
 		bullet.reset(center.x - bullet.width / 2, center.y - bullet.height / 2);
 		bullet.velocity.x = speed * v.x;
 		bullet.velocity.y = speed * v.y;
+		bullet.animation.play("fire", true);
+		bullet.angle = v.angleBetween(new FlxVector()) + 90;
 	}
 
 	function MakeChangeLocationState()

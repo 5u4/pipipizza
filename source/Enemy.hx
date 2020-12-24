@@ -42,7 +42,7 @@ class Enemy extends Entity
 	public function onHitBullet(bullet:Bullet)
 	{
 		bullet.kill();
-		receiveDamage(bullet.scale.x == 1 ? 1 : 15);
+		receiveDamage(bullet.isEnlarged() ? 15 : 1);
 	}
 
 	public function onHitWall(wall:FlxSprite) {}

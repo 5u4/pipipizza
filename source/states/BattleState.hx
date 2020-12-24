@@ -219,10 +219,10 @@ class BattleState extends FlxTransitionableState
 
 	function spawnParticleAt(b:Bullet)
 	{
-		var emitter = b.scale.x == 1 ? emitters.recycle() : largeEmitters.recycle();
+		var emitter = b.isEnlarged() ? largeEmitters.recycle() : emitters.recycle();
 		emitter.setPosition(b.x, b.y);
 		emitter.start(true, 0.1);
-		if (b.scale.x != 1)
+		if (b.isEnlarged())
 			FlxG.camera.shake(0.01, 0.1);
 	}
 
