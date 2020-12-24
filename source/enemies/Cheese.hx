@@ -80,6 +80,7 @@ class Cheese extends Enemy
 			bullet.angle = v.angleBetween(new FlxVector()) + 90;
 			v.rotateByDegrees(deg);
 		}
+		FlxG.sound.play(AssetPaths.cheese_shoot__wav);
 	}
 
 	function fireDirectly()
@@ -98,6 +99,7 @@ class Cheese extends Enemy
 		bullet.velocity.y = speed * v.y;
 		bullet.animation.play("fire", true);
 		bullet.angle = v.angleBetween(new FlxVector()) + 90;
+		FlxG.sound.play(AssetPaths.cheese_shoot__wav);
 	}
 
 	function MakeChangeLocationState()

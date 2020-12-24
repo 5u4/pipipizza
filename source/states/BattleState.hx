@@ -33,6 +33,7 @@ class BattleState extends FlxTransitionableState
 	var movableBgs:FlxTypedGroup<FlxSprite>;
 	var movableFgs:FlxTypedGroup<FlxSprite>;
 	var item:FlxSprite;
+	var itemTouched = false;
 	var prevPx:Float;
 	var _pause = 0.0;
 
@@ -166,8 +167,14 @@ class BattleState extends FlxTransitionableState
 			e.onHitBullet(b);
 		});
 		FlxG.collide(emitters, collisions);
-
-		FlxG.overlap(item, player, (_, _) -> switchSceneTimer.start(0));
+		FlxG.overlap(item, player, (_, _) ->
+		{
+			if (itemTouched)
+				return;
+			itemTouched = true;
+			FlxG.sound.play(AssetPaths.pickup__wav);
+			switchSceneTimer.start(0.1);
+		});
 
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
 			FlxG.switchState(new MenuState());
@@ -284,6 +291,7 @@ class BattleState extends FlxTransitionableState
 		var floatY = item.y - 30;
 		FlxTween.tween(item.scale, {x: 1, y: 1}, 0.5, {ease: FlxEase.backOut});
 		FlxTween.tween(item, {y: floatY}, 2, {type: PINGPONG, ease: FlxEase.sineInOut});
+		FlxG.sound.play(AssetPaths.show_item__wav);
 	}
 
 	function onLoadEntity(entity:EntityData)

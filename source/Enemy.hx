@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import modules.Entity;
 import modules.platformer.Gravity;
@@ -35,6 +36,7 @@ class Enemy extends Entity
 	{
 		health = Math.max(0, health - amount / hp);
 		flashEffect.apply();
+		FlxG.sound.play(AssetPaths.hit__wav);
 		onHit();
 		deathCheck();
 	}

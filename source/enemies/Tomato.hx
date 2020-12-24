@@ -1,5 +1,6 @@
 package enemies;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
@@ -75,6 +76,7 @@ class Tomato extends Enemy
 				facing = FlxObject.LEFT;
 			else if (norm.x > 0)
 				facing = FlxObject.RIGHT;
+			FlxG.sound.play(AssetPaths.tomato_jump__wav);
 		};
 		state.handle = _ -> animation.play(velocity.y < 0 ? "jump" : "fall");
 		state.shouldDisable = () -> isTouching(FlxObject.FLOOR);

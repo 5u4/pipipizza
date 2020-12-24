@@ -132,5 +132,6 @@ class Hog extends Enemy
 
 		velocity.x = -impulse.x * dir;
 		velocity.y = -impulse.y;
+		FlxG.sound.play(AssetPaths.hog_hit_wall__wav);
 	}
 }
