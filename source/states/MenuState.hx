@@ -81,12 +81,6 @@ class MenuState extends FlxTransitionableState
 		super.create();
 
 		if (FlxG.sound.music == null)
-		{
-			#if js
 			FlxG.sound.playMusic(progression.canAccessLevel(4) ? AssetPaths.this_is_christmas__mp3 : AssetPaths.a_peaceful_winter__mp3);
-			#else
-			FlxG.sound.playMusic(progression.canAccessLevel(4) ? AssetPaths.this_is_christmas__ogg : AssetPaths.a_peaceful_winter__ogg);
-			#end
-		}
 	}
 }

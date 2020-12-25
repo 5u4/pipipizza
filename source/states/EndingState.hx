@@ -33,9 +33,7 @@ class EndingState extends FlxTransitionableState
 
 		super.create();
 
-		var music = #if js AssetPaths.this_is_christmas__mp3; #else AssetPaths.this_is_christmas__ogg; #end
-
-		FlxG.sound.music.fadeOut(0.5, 0, _ -> FlxG.sound.playMusic(music));
+		FlxG.sound.music.fadeOut(0.5, 0, _ -> FlxG.sound.playMusic(AssetPaths.this_is_christmas__mp3));
 	}
 
 	override function update(elapsed:Float)
