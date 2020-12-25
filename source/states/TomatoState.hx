@@ -26,6 +26,11 @@ class TomatoState extends BattleState
 		return 0xFFFF8F88;
 	}
 
+	override function getTitleText():String
+	{
+		return "Garden";
+	}
+
 	override function handleWin()
 	{
 		progression.finishLevel(2);

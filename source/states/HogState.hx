@@ -26,6 +26,11 @@ class HogState extends BattleState
 		return 0xFFFFCBC0;
 	}
 
+	override function getTitleText():String
+	{
+		return "Barn";
+	}
+
 	override function handleWin()
 	{
 		progression.finishLevel(1);

@@ -9,6 +9,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxSound;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -25,6 +26,7 @@ class BattleState extends FlxTransitionableState
 	var hpHuds:Array<HpBlock>;
 	var enemyHp:HpHud;
 
+	var title:FlxText;
 	var progression:Progression;
 	var switchSceneTimer:FlxTimer;
 	var map:FlxOgmo3Loader;
@@ -47,6 +49,11 @@ class BattleState extends FlxTransitionableState
 
 		progression = new Progression();
 		switchSceneTimer = new FlxTimer();
+
+		title = new FlxText(0, 24, 0, '<${getTitleText()}>');
+		title.setFormat(AssetPaths.christmas_bell__otf, 128, FlxColor.WHITE, CENTER);
+		title.setBorderStyle(FlxTextBorderStyle.OUTLINE, 0xFFE24D39, 2);
+		title.screenCenter(X);
 
 		map = new FlxOgmo3Loader(AssetPaths.PlatformerShooter__ogmo, getRoom());
 		foregrounds = new FlxTypedGroup<FlxSprite>();
@@ -161,6 +168,8 @@ class BattleState extends FlxTransitionableState
 		if (switchSceneTimer.finished)
 			onLevelFinish();
 
+		title.alpha -= elapsed / 2;
+
 		prevPx = player.x;
 		super.update(elapsed);
 
@@ -207,6 +216,11 @@ class BattleState extends FlxTransitionableState
 		openSubState(pauseSubState);
 	}
 
+	function getTitleText()
+	{
+		return "";
+	}
+
 	function addLayers()
 	{
 		add(backgrounds);
@@ -222,6 +236,7 @@ class BattleState extends FlxTransitionableState
 		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
+		add(title);
 	}
 
 	function itemGraphic():FlxGraphicAsset

@@ -83,6 +83,7 @@ class CheeseState extends BattleState
 		add(enemyHp);
 		for (h in hpHuds)
 			add(h);
+		add(title);
 	}
 
 	override function update(elapsed:Float)
@@ -117,6 +118,11 @@ class CheeseState extends BattleState
 	override function getHealthColor():FlxColor
 	{
 		return 0xFFFFDD9C;
+	}
+
+	override function getTitleText():String
+	{
+		return "Stove";
 	}
 
 	override function itemGraphic():FlxGraphicAsset
