@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 class PauseSubState extends FlxSubState
 {
 	var paused:FlxText;
+	var resume:Btn;
 	var quit:Btn;
 
 	public function new(BGColor:FlxColor = 0xAA000000)
@@ -26,7 +27,10 @@ class PauseSubState extends FlxSubState
 		paused.screenCenter(X);
 		add(paused);
 
-		quit = new Btn(FlxG.width / 2, paused.y + paused.height + margin * 6, "Quit", () -> FlxG.switchState(new MenuState()), green);
+		resume = new Btn(FlxG.width / 2, paused.y + paused.height + margin * 6, "Resume", () -> close(), green);
+		add(resume);
+
+		quit = new Btn(FlxG.width / 2, resume.text.y + resume.text.height + margin, "Quit", () -> FlxG.switchState(new MenuState()), red);
 		add(quit);
 
 		super.create();
