@@ -39,6 +39,7 @@ class BattleState extends FlxTransitionableState
 	var showItemSound:FlxSound;
 	var prevPx:Float;
 	var _pause = 0.0;
+	var pauseSubState:PauseSubState;
 
 	override public function create()
 	{
@@ -141,6 +142,11 @@ class BattleState extends FlxTransitionableState
 		addBounds();
 		prevPx = player.x;
 
+		pauseSubState = new PauseSubState();
+		pauseSubState.openCallback = () -> FlxG.mouse.visible = true;
+		pauseSubState.closeCallback = () -> FlxG.mouse.visible = false;
+		destroySubStates = false;
+
 		addLayers();
 
 		super.create();
@@ -182,7 +188,23 @@ class BattleState extends FlxTransitionableState
 		});
 
 		if (FlxG.keys.anyJustPressed([ESCAPE]))
-			FlxG.switchState(new MenuState());
+			pause();
+	}
+
+	override function onFocusLost()
+	{
+		pause();
+	}
+
+	override function destroy()
+	{
+		pauseSubState.destroy();
+		super.destroy();
+	}
+
+	function pause()
+	{
+		openSubState(pauseSubState);
 	}
 
 	function addLayers()
