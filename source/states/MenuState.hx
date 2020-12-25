@@ -12,7 +12,6 @@ class MenuState extends FlxTransitionableState
 	var progression:Progression;
 	var initialized = false;
 	var bg:FlxSprite;
-	var titleText:FlxText;
 	var titleText2:FlxText;
 	var ingredient:FlxText;
 	var lv1Button:Btn;
@@ -40,43 +39,28 @@ class MenuState extends FlxTransitionableState
 		bg.loadGraphic(progression.canAccessLevel(4) ? AssetPaths.menu2__jpg : AssetPaths.menu1__jpg);
 		add(bg);
 
-		titleText = new FlxText(0, 0, 0, "Ho Ho Holiday,");
-		titleText.setFormat(AssetPaths.fresh_lychee__ttf, 128, FlxColor.WHITE, CENTER);
-		titleText.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 4);
-		titleText.screenCenter(X);
-		titleText.x -= 256;
-		titleText.y = 48;
-		add(titleText);
-
-		titleText2 = new FlxText(0, 0, 0, "Pi Pi PIZZA NIGHT 🍕");
-		titleText2.setFormat(AssetPaths.fresh_lychee__ttf, 128, FlxColor.WHITE, CENTER);
-		titleText2.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 4);
-		titleText2.screenCenter(X);
-		titleText2.x += 128;
-		titleText2.y = titleText.y + titleText.height + 12;
-		add(titleText2);
-
 		var xpos = FlxG.width / 3.0 * 2.0 + 24;
 		var margin = 16;
+		var red:FlxColor = 0xFFE24D39, green:FlxColor = 0xFF4E9E36;
 
-		ingredient = new FlxText(xpos, 0, 0, "Ingredients");
-		ingredient.setFormat(AssetPaths.fresh_lychee__ttf, 88, FlxColor.WHITE, CENTER);
-		ingredient.setBorderStyle(FlxTextBorderStyle.SHADOW, 0xFF327345, 3);
+		ingredient = new FlxText(xpos, 0, 0, "(Ingredients)");
+		ingredient.setFormat(AssetPaths.christmas_bell__otf, 128, FlxColor.WHITE, CENTER);
+		ingredient.setBorderStyle(FlxTextBorderStyle.OUTLINE, red, 2);
 		ingredient.screenCenter(Y);
 		ingredient.x -= ingredient.frameWidth / 2;
-		ingredient.y -= 88;
+		ingredient.y -= 256;
 		add(ingredient);
 
-		lv1Button = new Btn(xpos, 0, "Sausage", () -> FlxG.switchState(new HogState()));
+		lv1Button = new Btn(xpos, 0, "Sausage", () -> FlxG.switchState(new HogState()), green);
 		lv1Button.updateParam(b ->
 		{
-			b.y += ingredient.y + ingredient.height + margin * 2;
+			b.y += ingredient.y + ingredient.height + margin * 4;
 		});
 		add(lv1Button);
 
 		if (progression.canAccessLevel(2))
 		{
-			lv2Button = new Btn(xpos, 0, "Tomato Sauce", () -> FlxG.switchState(new TomatoState()));
+			lv2Button = new Btn(xpos, 0, "Tomato Sauce", () -> FlxG.switchState(new TomatoState()), red);
 			lv2Button.updateParam(b ->
 			{
 				b.y = lv1Button.text.y + lv1Button.text.height + margin;
@@ -86,7 +70,7 @@ class MenuState extends FlxTransitionableState
 
 		if (progression.canAccessLevel(3))
 		{
-			lv3Button = new Btn(xpos, 0, "Cheese", () -> FlxG.switchState(new CheeseState()));
+			lv3Button = new Btn(xpos, 0, "Cheese", () -> FlxG.switchState(new CheeseState()), green);
 			lv3Button.updateParam(b ->
 			{
 				b.y = lv2Button.text.y + lv2Button.text.height + margin;
