@@ -59,11 +59,17 @@ class Player extends Entity
 		this.onHitEmitter = onHitEmitter;
 		this.framePauser = framePauser;
 
-		chargeSound = FlxG.sound.load(AssetPaths.charging__mp3);
-		chargedSound = FlxG.sound.load(AssetPaths.charged__mp3);
-		hitSound = FlxG.sound.load(AssetPaths.player_hit__mp3);
-		shootSound = FlxG.sound.load(AssetPaths.shoot__mp3);
-		chargedShootSound = FlxG.sound.load(AssetPaths.charged_shoot__mp3);
+		chargeSound = FlxG.sound.load(#if html5 AssetPaths.charging__mp3 #else AssetPaths.charging__wav #end);
+		chargedSound = FlxG.sound.load(#if html5 AssetPaths.charged__mp3 #else AssetPaths.charged__wav #end);
+		hitSound = FlxG.sound.load(#if html5 AssetPaths.player_hit__mp3 #else AssetPaths.player_hit__wav #end);
+		shootSound = FlxG.sound.load(#if html5 AssetPaths.shoot__mp3 #else AssetPaths.shoot__wav #end);
+		chargedShootSound = FlxG.sound.load(#if html5 AssetPaths.charged_shoot__mp3 #else AssetPaths.charged_shoot__wav #end);
+
+		chargeSound.volume = Reg.sfxVolume;
+		chargedSound.volume = Reg.sfxVolume;
+		hitSound.volume = Reg.sfxVolume;
+		shootSound.volume = Reg.sfxVolume;
+		chargedShootSound.volume = Reg.sfxVolume;
 	}
 
 	override function update(elapsed:Float)

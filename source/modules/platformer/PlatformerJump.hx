@@ -24,7 +24,8 @@ class PlatformerJump extends Component
 	public function new()
 	{
 		super();
-		sound = FlxG.sound.load(AssetPaths.jump__mp3);
+		sound = FlxG.sound.load(#if html5 AssetPaths.jump__mp3 #else AssetPaths.jump__wav #end);
+		sound.volume = Reg.sfxVolume;
 	}
 
 	override function update(elapsed:Float)

@@ -24,7 +24,8 @@ class Enemy extends Entity
 		addComponent(grav);
 		flashEffect = new FlashEffect();
 		shader = flashEffect.shader;
-		hitSound = FlxG.sound.load(AssetPaths.hit__mp3);
+		hitSound = FlxG.sound.load(#if html5 AssetPaths.hit__mp3 #else AssetPaths.hit__wav #end);
+		hitSound.volume = Reg.sfxVolume;
 	}
 
 	public function render() {}

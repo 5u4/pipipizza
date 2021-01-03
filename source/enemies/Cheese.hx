@@ -40,7 +40,8 @@ class Cheese extends Enemy
 		brain.states.push(MakeFireState());
 		brain.states.push(MakeAimState());
 
-		shootSound = FlxG.sound.load(AssetPaths.cheese_shoot__mp3);
+		shootSound = FlxG.sound.load(#if html5 AssetPaths.cheese_shoot__mp3 #else AssetPaths.cheese_shoot__wav #end);
+		shootSound.volume = Reg.sfxVolume;
 	}
 
 	override function render()

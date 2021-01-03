@@ -139,8 +139,10 @@ class BattleState extends FlxTransitionableState
 		item = new FlxSprite();
 		item.loadGraphic(itemGraphic());
 		item.visible = false;
-		pickUpSound = FlxG.sound.load(AssetPaths.pickup__mp3);
-		showItemSound = FlxG.sound.load(AssetPaths.show_item__mp3);
+		pickUpSound = FlxG.sound.load(#if html5 AssetPaths.pickup__mp3 #else AssetPaths.pickup__wav #end);
+		showItemSound = FlxG.sound.load(#if html5 AssetPaths.show_item__mp3 #else AssetPaths.show_item__wav #end);
+		pickUpSound.volume = Reg.sfxVolume;
+		showItemSound.volume = Reg.sfxVolume;
 
 		map.loadEntities(onLoadEntity, "backgrounds");
 		map.loadEntities(onLoadEntity, "collisions");

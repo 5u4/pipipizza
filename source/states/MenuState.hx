@@ -22,6 +22,7 @@ class MenuState extends FlxTransitionableState
 	{
 		if (initialized)
 			return;
+		FlxG.mouse.useSystemCursor = true;
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK);
 		initialized = true;
@@ -81,6 +82,14 @@ class MenuState extends FlxTransitionableState
 		super.create();
 
 		if (FlxG.sound.music == null)
-			FlxG.sound.playMusic(progression.canAccessLevel(4) ? AssetPaths.this_is_christmas__mp3 : AssetPaths.a_peaceful_winter__mp3);
+		{
+			#if html5
+			var music = progression.canAccessLevel(4) ? AssetPaths.this_is_christmas__mp3 : AssetPaths.a_peaceful_winter__mp3;
+			#else
+			var music = progression.canAccessLevel(4) ? AssetPaths.this_is_christmas__ogg : AssetPaths.a_peaceful_winter__ogg;
+			#end
+			FlxG.sound.playMusic(music);
+			FlxG.sound.music.volume = Reg.bgmVolume;
+		}
 	}
 }

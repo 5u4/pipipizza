@@ -29,7 +29,8 @@ class Hog extends Enemy
 		brain.states.push(MakeChargeState());
 		brain.states.push(MakeIdleState());
 
-		hitWallSound = FlxG.sound.load(AssetPaths.hog_hit_wall__mp3);
+		hitWallSound = FlxG.sound.load(#if html5 AssetPaths.hog_hit_wall__mp3 #else AssetPaths.hog_hit_wall__wav #end);
+		hitWallSound.volume = Reg.sfxVolume;
 	}
 
 	override function render()

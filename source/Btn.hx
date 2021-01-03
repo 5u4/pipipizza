@@ -57,7 +57,8 @@ class Btn extends FlxTypedGroup<FlxSprite>
 		if (onClick != null)
 			onMouseUp = onClick;
 
-		sound = FlxG.sound.load(AssetPaths.pickup__mp3);
+		sound = FlxG.sound.load(#if html5 AssetPaths.pickup__mp3 #else AssetPaths.pickup__wav #end);
+		sound.volume = Reg.sfxVolume;
 	}
 
 	public function updateParam(Update:(obj:FlxSprite) -> Void)

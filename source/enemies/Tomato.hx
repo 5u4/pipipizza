@@ -27,7 +27,8 @@ class Tomato extends Enemy
 		brain.states.push(MakeJumpAttackState());
 		brain.states.push(MakeIdleState());
 
-		jumpSound = FlxG.sound.load(AssetPaths.tomato_jump__mp3);
+		jumpSound = FlxG.sound.load(#if html5 AssetPaths.tomato_jump__mp3 #else AssetPaths.tomato_jump__wav #end);
+		jumpSound.volume = Reg.sfxVolume;
 	}
 
 	override function render()
