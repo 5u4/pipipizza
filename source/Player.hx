@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxVector;
@@ -97,7 +98,7 @@ class Player extends Entity
 		getImpulse(enemy);
 	}
 
-	public function onHitBullet(bullet:Bullet)
+	public function onHitBullet(bullet:FlxSprite)
 	{
 		if (_invincible > 0)
 			return;

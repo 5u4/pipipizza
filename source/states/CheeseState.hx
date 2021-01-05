@@ -33,7 +33,7 @@ class CheeseState extends BattleState
 		}
 
 		enemyBullets = new FlxTypedGroup<FlxSprite>();
-		for (_ in 0...400)
+		for (_ in 0...100)
 		{
 			var bullet = new FlxSprite();
 			bullet.loadGraphic(AssetPaths.cheese_bullet__png, true, 80, 53);
@@ -42,7 +42,7 @@ class CheeseState extends BattleState
 			bullet.animation.finishCallback = (name:String) ->
 			{
 				if (name == "fire")
-					bullet.animation.play("fly");
+					bullet.animation.play("fly", true);
 			}
 			bullet.kill();
 			enemyBullets.add(bullet);
@@ -95,8 +95,8 @@ class CheeseState extends BattleState
 
 		FlxG.collide(player, bricks);
 		FlxG.overlap(player, enemyBullets, (p:Player, b) -> p.onHitBullet(b));
-		FlxG.collide(enemyBullets, bricks, (b:Bullet, w) -> b.kill());
-		FlxG.collide(enemyBullets, collisions, (b:Bullet, w) -> b.kill());
+		FlxG.collide(enemyBullets, bricks, (b:FlxSprite, w) -> b.kill());
+		FlxG.collide(enemyBullets, collisions, (b:FlxSprite, w) -> b.kill());
 		FlxG.collide(bullets, bricks, (b:Bullet, w) ->
 		{
 			spawnParticleAt(b);
@@ -138,7 +138,7 @@ class CheeseState extends BattleState
 
 	override function getEnemy():Enemy
 	{
-		return new Cheese(player, () -> enemyBullets.getFirstAvailable());
+		return new Cheese(player, () -> enemyBullets.recycle());
 	}
 
 	override function getRoom():String
