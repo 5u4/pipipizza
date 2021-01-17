@@ -84,6 +84,7 @@ class CheeseState extends BattleState
 		for (h in hpHuds)
 			add(h);
 		add(title);
+		add(player.dpad);
 	}
 
 	override function update(elapsed:Float)

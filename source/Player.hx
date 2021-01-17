@@ -7,6 +7,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxVector;
 import flixel.system.FlxSound;
+import flixel.ui.FlxVirtualPad;
 import modules.Entity;
 import modules.platformer.PlatformerController;
 import openfl8.InvincibleEffect;
@@ -18,6 +19,7 @@ class Player extends Entity
 	public var charge = 0.0;
 	public var attackFrames = 0.0;
 	public var controller:PlatformerController;
+	public var dpad:FlxVirtualPad;
 
 	var chargeSound:FlxSound;
 	var chargedSound:FlxSound;
@@ -52,7 +54,30 @@ class Player extends Entity
 		animation.add("charge", [9, 10, 11, 12], 4, false);
 		animation.add("chargeAttack", [13], 6, false);
 
-		controller = new PlatformerController();
+		#if !desktop
+		if (!Reg.hasKeyboard)
+		{
+			dpad = new FlxVirtualPad(LEFT_RIGHT, A_B);
+			var dpadScale = 3.5;
+			dpad.buttonLeft.scale.set(dpadScale, dpadScale);
+			dpad.buttonRight.scale.set(dpadScale, dpadScale);
+			dpad.buttonA.scale.set(dpadScale, dpadScale);
+			dpad.buttonB.scale.set(dpadScale, dpadScale);
+			dpad.buttonLeft.updateHitbox();
+			dpad.buttonRight.updateHitbox();
+			dpad.buttonA.updateHitbox();
+			dpad.buttonB.updateHitbox();
+			var dpadMargin = 96.0;
+			var dpadBtnMargin = 48.0;
+			var y = FlxG.height - dpad.buttonLeft.height - dpadMargin;
+			dpad.buttonLeft.setPosition(dpadMargin, y);
+			dpad.buttonRight.setPosition(dpad.buttonLeft.width + dpadMargin + dpadBtnMargin, y);
+			dpad.buttonA.setPosition(FlxG.width - dpad.buttonA.width - dpadMargin, y);
+			dpad.buttonB.setPosition(dpad.buttonA.x - dpadBtnMargin - dpad.buttonB.width, y);
+		}
+		#end
+
+		controller = new PlatformerController(dpad);
 		addComponent(controller);
 		solid = true;
 		invincibleEffect = new InvincibleEffect();
@@ -75,11 +100,33 @@ class Player extends Entity
 
 	override function update(elapsed:Float)
 	{
+		updateDPadExistance();
 		attackFrames -= elapsed;
 		_invincible -= elapsed;
 		super.update(elapsed);
 		handleInvincibleEffect();
 		handleShoot(elapsed);
+	}
+
+	override function destroy()
+	{
+		if (dpad != null)
+		{
+			dpad.destroy();
+			dpad = null;
+		}
+		super.destroy();
+	}
+
+	function updateDPadExistance()
+	{
+		if (Reg.hasKeyboard || FlxG.keys.getIsDown().length == 0)
+			return;
+		Reg.hasKeyboard = true;
+		if (dpad == null)
+			return;
+		dpad.kill();
+		dpad = null;
 	}
 
 	public function onHitEnemy(enemy:Enemy)
@@ -143,13 +190,13 @@ class Player extends Entity
 
 	function handleShoot(elapsed:Float)
 	{
-		if (FlxG.keys.anyJustPressed([X, K]))
+		if (FlxG.keys.anyJustPressed([X, K]) || (dpad != null && dpad.buttonA.justPressed))
 		{
 			animation.play("charge");
 			if (!chargeSound.playing)
 				chargeSound.play(true);
 		}
-		if (FlxG.keys.anyPressed([X, K]))
+		if (FlxG.keys.anyPressed([X, K]) || (dpad != null && dpad.buttonA.pressed))
 		{
 			charge += elapsed;
 			if (charge > chargeAttackThreshold)
@@ -158,7 +205,7 @@ class Player extends Entity
 		controller.movement.speedScale = charge > chargeInitiateThreshold ? chargeSpeedScale : 1;
 		controller.jump.jumpScale = charge > chargeInitiateThreshold ? chargeJumpScale : 1;
 
-		if (!FlxG.keys.anyJustReleased([X, K]))
+		if (!FlxG.keys.anyJustReleased([X, K]) && !(dpad != null && dpad.buttonA.justReleased))
 			return;
 
 		if (chargeSound.playing)

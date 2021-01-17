@@ -239,6 +239,7 @@ class BattleState extends FlxTransitionableState
 		for (h in hpHuds)
 			add(h);
 		add(title);
+		add(player.dpad);
 	}
 
 	function itemGraphic():FlxGraphicAsset
